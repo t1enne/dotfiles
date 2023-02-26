@@ -1,6 +1,4 @@
-# Path to your oh-my-zsh installation.
-export ZSH="/home/nasmx/.oh-my-zsh"
-
+source $HOME/.zshenv
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -50,12 +48,6 @@ ENABLE_CORRECTION="false"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-# JIRA ENV
-export JIRA_URL="https://raintonic.atlassian.net"
-export JIRA_NAME="Nasir Taov"
-export JIRA_PREFIX="UPR-"
-export JIRA_DEFAULT_ACTION="dashboard"
-# export JIRA_RAPID_BOARD=""
 
 plugins=(
   git
@@ -68,40 +60,8 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-# export MANPATH="/usr/local/man:$MANPATH"
-export DENO_INSTALL="/home/nasmx/.deno"
-export GOROOT="/home/nasmx/go"
-export GOPATH="$GOROOT/bin"
-export GO111MODULE=on # needed for WAILS
-export PNPM_HOME="$HOME/.local/share/pnpm" # pnpm
-export DOTFILES="/home/nasmx/Documents/code/dotfiles"
-
-eval "$(luarocks path)" # eval needed for lua 
-
-path+=("$HOME/.local/bin")
-path+=("$HOME/.npm-packages/bin")
-path+=("$HOME/.deno/bin")
-path+=("$GOPATH")
-path+=("$GOPATH/bin")
-path+=("$HOME/.yarn/bin")
-path+=("$HOME/.node/bin")
-path+=("$HOME/.config/yarn/global/node_modules/.bin")
-path+=("$PNPM_HOME:$PATH")
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nvim'
-else
-  export EDITOR='nvim'
-fi
-
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
-
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -113,7 +73,7 @@ alias add="sudo apt install"
 alias remove="sudo apt remove"
 alias update="sudo apt update"
 alias lg="lazygit"
-alias 3n="nnn"
+alias 3n="nnn -a"
 alias python="python3"
 
 # Jira
@@ -143,18 +103,12 @@ function ccode() {
   fi
 }
 
-alias cgt="cat ~/Documents/code/.git-token | xclip -sel c"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # tabtab source for electron-forge package
 # uninstall by removing these lines or running `tabtab uninstall electron-forge`
 [[ -f /home/nasmx/Documents/code/node/mith-ts/node_modules/tabtab/.completions/electron-forge.zsh ]] && . /home/nasmx/Documents/code/node/mith-ts/node_modules/tabtab/.completions/electron-forge.zsh
 
-# Load Angular CLI autocompletion.
-# source <(ng completion script)
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# if [ -z "$TMUX" ] && [ ${UID} != 0 ]
+# then
+#     tmux new -As0
+# fi

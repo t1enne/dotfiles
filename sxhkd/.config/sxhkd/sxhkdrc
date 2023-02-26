@@ -21,6 +21,9 @@ super + shift + Return
 super + d
     rofi -show drun
 
+super + q
+    $HOME/.config/rofi/scripts/powermenu.sh
+
 super + w
 		feh --randomize --bg-fill ~/Pictures/wallpapers &
 
