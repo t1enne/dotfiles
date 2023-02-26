@@ -75,6 +75,7 @@ export GOROOT="/home/nasmx/go"
 export GOPATH="$GOROOT/bin"
 export GO111MODULE=on # needed for WAILS
 export PNPM_HOME="$HOME/.local/share/pnpm" # pnpm
+export DOTFILES="/home/nasmx/Documents/code/dotfiles"
 
 eval "$(luarocks path)" # eval needed for lua 
 
@@ -119,13 +120,13 @@ alias python="python3"
 alias jirah="cat ~/.oh-my-zsh/plugins/jira/README.md"
 
 # Confs
-alias zc="$EDITOR ~/.zshrc"
+alias zc="$EDITOR $DOTFILES/zsh/.zshrc"
 alias zs="source ~/.zshrc"
-alias tmuxc="$EDITOR ~/.tmux.conf"
-alias wmc="$EDITOR ~/.config/bspwm/bspwmrc"
-alias keybinds="$EDITOR ~/.config/sxhkd/sxhkdrc"
-alias kc="$EDITOR ~/.config/kitty/kitty.conf"
-alias nvimc="cd ~/.config/nvim;$EDITOR lua/user/init.lua"
+alias tmuxc="$EDITOR $DOTFILES/tmux/.tmux.conf"
+alias wmc="$EDITOR $DOTFILES/bspwm/.config/bspwm/bspwmrc"
+alias keybinds="$EDITOR $DOTFILES/sxhkd/.config/sxhkd/sxhkdrc"
+alias kc="$EDITOR $DOTFILES/kitty/.config/kitty/kitty.conf"
+alias stowc="cd $DOTFILES;stow */ -t $HOME;cd -"
 
 alias cc="clear"
 alias cdl="cd $HOME/Downloads"

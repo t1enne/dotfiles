@@ -75,11 +75,11 @@ super + ctrl + {1-3}
 	bspc node -l {below,normal,above}
 
 # Mode
-super + {f,s,t,p}
-    bspc node -t "~"{fullscreen,floating,tiled,pseudo_tiled}
+super + {s,t,p}
+    bspc node -t "~"{floating,tiled,pseudo_tiled}
 
 # monocle/tiled
-super + space
+super + f
     bspc desktop -l {monocle,tiled}
 
 # Set the node flags
