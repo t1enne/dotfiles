@@ -1,0 +1,64 @@
+#! /bin/sh
+
+# Keybinds
+pgrep -x sxhkd > /dev/null || sxhkd &
+killall -9 sxhkd ksuperkey
+sxhkd &
+
+# Bar
+pgrep -x xfce4-panel > /dev/null || xfce4-panel -d &
+killall -9 xfce4-panel
+xfce4-panel -d &
+
+# Dunst
+killall -9 dunst
+dunst &
+
+bspc monitor -d 󰈹   󰇮  󰃂  
+
+bspc config border_width         2
+bspc config window_gap          10
+
+bspc config top_padding          50
+bspc config left_padding         0
+bspc config right_padding        0
+bspc config split_ratio          0.5
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+bspc config pointer_follows_focus true
+bspc config focus_follows_pointer true
+
+bspc rule -a Galculator state=floating follow=on
+bspc rule -a Chromium desktop='^1'
+bspc rule -a firefox desktop='^1'
+bspc rule -a Dunst state=floating
+bspc rule -a Clementine desktop='^4'
+bspc rule -a '*:*:Panel Preferences' state=floating
+bspc rule -a '*:*:Add New Items' state=floating
+bspc rule -a Pavucontrol state=floating
+
+# Border
+bspc config focused_border_color        "#303134"
+bspc config normal_border_color         "#242427"
+bspc config active_border_color         "#242427"
+
+ksuperkey -e 'Super_L=Alt_L|F1' &
+ksuperkey -e 'Super_R=Alt_L|F1' &
+
+# Autostart Scripts:
+# Kbd layouts
+setxkbmap -option grp:alt_shift_toggle us,it
+# BG
+feh --randomize --bg-fill ~/Pictures/wallpapers &
+# Notifications
+# xfce4-notifyd-start &
+# Polkit
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+# Dex
+# dex -a -s /etc/xdg/autostart/:~/.config/autostart/  &
+# Picom
+picom &
+# Network Applet
+nm-applet --indicator &
+# Cursor
+xsetroot -cursor_name left_ptr &

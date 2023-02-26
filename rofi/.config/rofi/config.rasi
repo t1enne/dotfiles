@@ -1,0 +1,17 @@
+/**
+ *
+ * Author : Aditya Shakya (adi1090x)
+ * Github : @adi1090x
+ * 
+ * Configuration For Rofi Version: 1.7.3
+ **/
+
+configuration {
+	modi: "drun,run";
+	steal-focus: false;
+	font: "Sans 10";
+	show-icons: true;
+}
+
+
+@theme "styles/slate.rasi"

@@ -1,0 +1,319 @@
+.xfce4-panel {
+  /* background-color: #2F343F; */
+  color: #ffffff;
+  margin: 10px;
+  padding: 10px;
+  width: 900px;
+}
+
+#whiskermenu-button label {
+  font-weight: bold;
+}
+
+.xfce4-panel .tasklist .toggle {
+  background-color: #454C5A;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  padding: 10px;
+}
+
+/*Clock*/
+
+#clock-button {
+  background-color: #454C5A;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  padding: 10px;
+}
+
+#clock-button:checked {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  padding: 10px;
+}
+
+#clock-button:hover {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  padding: 10px;
+}
+
+#pulseaudio-button {
+  background-color: #454C5A;
+  /* color: #ffffff; */
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  padding: 10px;
+}
+
+/*Sound*/
+
+#pulseaudio-button:checked {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  padding: 10px;
+}
+
+#pulseaudio-button:hover {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  padding: 10px;
+}
+
+#xfce4-notification-plugin {
+  background-color: #454C5A;
+  /* color: #ffffff; */
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  /* padding: 10px; */
+}
+
+#xfce4-notification-plugin:checked {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  /* padding: 10px; */
+}
+
+#xfce4-notification-plugin:hover {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+  /* padding: 10px; */
+}
+
+/*Workspace Switcher*/
+
+#xfce-panel-toggle-button:checked {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+}
+
+#xfce-panel-toggle-button:hover {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+}
+
+#xfce-panel-toggle-button {
+  background-color: #454C5A;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin: 2px;
+}
+
+/*Firefox Launcher*/
+
+#launcher-4 #launcher-arrow {
+  background-color: #454C5A;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 0px;
+  margin-left: 2px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+#launcher-4 #launcher-arrow:checked {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 0px;
+  margin-left: 2px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+#launcher-4 #launcher-arrow:hover {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 0px;
+  margin-left: 2px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+/*Files*/
+
+#launcher-5 #launcher-arrow {
+  background-color: #454C5A;
+  color: #ffffff;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+#launcher-5 #launcher-arrow:checked {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+#launcher-5 #launcher-arrow:hover {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+/*Terminal*/
+
+#launcher-6 #launcher-arrow {
+  background-color: #454c5a;
+  color: #ffffff;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+#launcher-6 #launcher-arrow:checked {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+#launcher-6 #launcher-arrow:hover {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+/*Music*/
+
+#sn-button {
+  background-color: #454C5A;
+  /* color: #ffffff; */
+  margin: 2px; 
+  padding: 2px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+#sn-button:checked {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}
+
+#sn-button:hover {
+  background-color: #5294E2;
+  color: #ffffff;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom:2px;
+}

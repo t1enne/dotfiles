@@ -1,0 +1,57 @@
+* {
+  background-color: transparent;
+  border-color: #2e343f;
+  text-color: #BBC3C8;
+  spacing: 0;
+  width: 600px;
+  height: 456px;
+}
+
+window {
+  transparency: "real";
+  background-color: #22252C;
+}
+
+inputbar {
+  border: 0 0 1px 0;
+  border-color: inherit;
+  children: [prompt,entry];
+}
+
+prompt {
+  padding: 12px;
+  border: 0 1px 0 0;
+  border-color: inherit;
+  font-weight: bold;
+}
+
+textbox {
+  border: 0 0 1px 0;
+  border-color: inherit;
+  padding: 8px 12px;
+}
+
+entry {
+  padding: 12px;
+}
+
+listview {
+  enabled:                     true;
+  columns:                     1;
+}
+
+element {
+  padding: 8px;
+  margin: 5px;
+  text-color: #000;
+}
+
+element selected {
+  background-color: #000;
+  font-weight: bold;
+  /* border-radius: 5px; */
+}
+
+element-icon {
+  margin: 0 10px 0 0;
+}
