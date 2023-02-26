@@ -9,7 +9,8 @@
 
 window {
   transparency: "real";
-  background-color: #22252C;
+  blur: 15;
+  background-color: #22252C80;
 }
 
 inputbar {
@@ -23,6 +24,7 @@ prompt {
   border: 0 1px 0 0;
   border-color: inherit;
   font-weight: bold;
+  background-color: black;
 }
 
 textbox {
