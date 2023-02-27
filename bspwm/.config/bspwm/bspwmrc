@@ -1,19 +1,5 @@
 #! /bin/sh
 
-# Keybinds
-pgrep -x sxhkd > /dev/null || sxhkd &
-killall -9 sxhkd ksuperkey
-sxhkd &
-
-# Bar
-pgrep -x xfce4-panel > /dev/null || xfce4-panel -d &
-killall -9 xfce4-panel
-xfce4-panel -d &
-
-# Dunst
-killall -9 dunst
-dunst &
-
 bspc monitor -d 󰈹   󰇮  󰃂  
 
 bspc config border_width         2
@@ -46,12 +32,26 @@ ksuperkey -e 'Super_L=Alt_L|F1' &
 ksuperkey -e 'Super_R=Alt_L|F1' &
 
 # Autostart Scripts:
+# Keybinds
+pgrep -x sxhkd > /dev/null || sxhkd &
+killall -9 sxhkd ksuperkey
+sxhkd &
+
+# Bar
+pgrep -x xfce4-panel > /dev/null || xfce4-panel -d &
+killall -9 xfce4-panel
+xfce4-panel -d &
+
+# Notifications
+# xfce4-notifyd-start &
+
+# Dunst
+killall -9 dunst
+dunst &
 # Kbd layouts
 setxkbmap -option grp:alt_shift_toggle us,it
 # BG
 feh --randomize --bg-fill ~/Pictures/wallpapers &
-# Notifications
-# xfce4-notifyd-start &
 # Polkit
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 # Dex
