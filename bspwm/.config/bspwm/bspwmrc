@@ -54,8 +54,6 @@ setxkbmap -option grp:alt_shift_toggle us,it
 feh --randomize --bg-fill ~/Pictures/wallpapers &
 # Polkit
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-# Dex
-# dex -a -s /etc/xdg/autostart/:~/.config/autostart/  &
 # Picom
 picom &
 # Network Applet

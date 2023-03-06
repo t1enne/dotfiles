@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH="/home/nasmx/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # JIRA ENV
 export JIRA_URL="https://raintonic.atlassian.net"
@@ -9,16 +9,17 @@ export JIRA_DEFAULT_ACTION="dashboard"
 # export JIRA_RAPID_BOARD=""
 
 export NNN_PLUG='p:preview-tui'
+export NNN_FCOLORS=''
 export NNN_FIFO='tmp/nnn.fifo'
 
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
-export DENO_INSTALL="/home/nasmx/.deno"
-export GOROOT="/home/nasmx/go"
+export DENO_INSTALL="$HOME/.deno"
+export GOROOT="$HOME/go"
 export GOPATH="$GOROOT/bin"
 export GO111MODULE=on # needed for WAILS
 export PNPM_HOME="$HOME/.local/share/pnpm" # pnpm
-export DOTFILES="/home/nasmx/Documents/code/dotfiles"
+export DOTFILES="$HOME/.dotfiles"
 
 eval "$(luarocks path)" # eval needed for lua 
 

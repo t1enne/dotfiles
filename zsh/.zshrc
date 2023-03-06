@@ -106,7 +106,7 @@ function ccode() {
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # tabtab source for electron-forge package
 # uninstall by removing these lines or running `tabtab uninstall electron-forge`
-[[ -f /home/nasmx/Documents/code/node/mith-ts/node_modules/tabtab/.completions/electron-forge.zsh ]] && . /home/nasmx/Documents/code/node/mith-ts/node_modules/tabtab/.completions/electron-forge.zsh
+[[ -f $HOME/Documents/code/node/mith-ts/node_modules/tabtab/.completions/electron-forge.zsh ]] && . /home/nasmx/Documents/code/node/mith-ts/node_modules/tabtab/.completions/electron-forge.zsh
 
 # if [ -z "$TMUX" ] && [ ${UID} != 0 ]
 # then
