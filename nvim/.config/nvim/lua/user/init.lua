@@ -82,7 +82,7 @@ local config = {
     -- Modify the color palette for the default theme
     colors = {
       fg = "#abb2bf",
-      bg = "#1e222a",
+      bg = "NONE",
     },
     highlights = function(hl) -- or a function that returns a new table of colors to set
       hl.Normal = { fg = C.fg, bg = C.bg }
@@ -133,7 +133,9 @@ local config = {
       format_on_save = {
         enabled = true, -- enable or disable format on save globally
         filter = function(client)
-          if client.name == "tsserver" then return false end
+          if client.name == "tsserver" then
+            return false
+          end
         end,
         allow_filetypes = { -- enable format on save for specified filetypes only
           -- "go",
@@ -221,13 +223,23 @@ local config = {
     },
     -- All other entries override the require("<key>").setup({...}) call for default plugins
     ["null-ls"] = function(config) -- overrides `require("null-ls").setup(config)`
-      local null_ls = require "null-ls"
-      -- Check supported formatters and linters
+      local null_ls = require("null-ls")
       -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/formatting
       -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/diagnostics
-      config.sources = {
-        null_ls.builtins.formatting.rome, -- will use the source for all supported file types
-      }
+      config.sources = {}
+      -- null_ls.builtins.formatting.rome, -- will use the source for all supported file types
+      -- null_ls.builtins.formatting.prettier_d_slim
+      -- prettier_d_slim = function()
+      --   local null_ls = require("null-ls")
+      null_ls.register(null_ls.builtins.formatting.prettier_d_slim.with({
+        -- condition = function(utils)
+        --   return utils.root_has_file(".prettierrc")
+        --       or utils.root_has_file(".prettierrc.json")
+        --       or utils.root_has_file(".prettierrc.js")
+        -- end,
+      }))
+      -- end,
+
       return config -- return final config table
     end,
     treesitter = { -- overrides `require("treesitter").setup(...)`
@@ -239,18 +251,17 @@ local config = {
     },
     -- use mason-null-ls to configure Formatters/Linter installation for null-ls sources
     ["mason-null-ls"] = { -- overrides `require("mason-null-ls").setup(...)`
-      ensure_installed = { "stylua" },
+      ensure_installed = { "stylua", "prettier_d_slim" },
       setup_handlers = {
         -- prettier = function()
-        --   local null_ls = require "null-ls"
-        --   null_ls.register(null_ls.builtins.formatting.prettier.with {
+        --   local null_ls = require("null-ls")
+        --   null_ls.register(null_ls.builtins.formatting.prettier.with({
         --     condition = function(utils)
-        --       return utils.root_has_file "package.json"
-        --           or utils.root_has_file ".prettierrc"
-        --           or utils.root_has_file ".prettierrc.json"
-        --           or utils.root_has_file ".prettierrc.js"
+        --       return utils.root_has_file(".prettierrc")
+        --           or utils.root_has_file(".prettierrc.json")
+        --           or utils.root_has_file(".prettierrc.js")
         --     end,
-        --   })
+        --   }))
         -- end,
       },
     },
