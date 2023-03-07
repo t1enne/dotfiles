@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channel name="xfce4-panel" version="1.0">
+  <property name="configver" type="int" value="2"/>
+  <property name="panels" type="array">
+    <value type="int" value="1"/>
+    <property name="dark-mode" type="bool" value="true"/>
+    <property name="panel-1" type="empty">
+      <property name="position" type="string" value="p=0;x=840;y=31"/>
+      <property name="length" type="uint" value="98"/>
+      <property name="position-locked" type="bool" value="true"/>
+      <property name="icon-size" type="uint" value="16"/>
+      <property name="size" type="uint" value="36"/>
+      <property name="plugin-ids" type="array">
+        <value type="int" value="15"/>
+        <value type="int" value="1"/>
+        <value type="int" value="4"/>
+        <value type="int" value="2"/>
+        <value type="int" value="3"/>
+        <value type="int" value="7"/>
+        <value type="int" value="5"/>
+        <value type="int" value="6"/>
+        <value type="int" value="8"/>
+        <value type="int" value="10"/>
+        <value type="int" value="13"/>
+        <value type="int" value="9"/>
+        <value type="int" value="11"/>
+        <value type="int" value="12"/>
+        <value type="int" value="14"/>
+        <value type="int" value="16"/>
+      </property>
+      <property name="length-adjust" type="bool" value="false"/>
+      <property name="nrows" type="uint" value="1"/>
+      <property name="background-style" type="uint" value="1"/>
+      <property name="enter-opacity" type="uint" value="100"/>
+      <property name="leave-opacity" type="uint" value="100"/>
+      <property name="background-rgba" type="array">
+        <value type="double" value="0.270588"/>
+        <value type="double" value="0.298039"/>
+        <value type="double" value="0.352941"/>
+        <value type="double" value="0.718861"/>
+      </property>
+      <property name="autohide-behavior" type="uint" value="1"/>
+      <property name="disable-struts" type="bool" value="false"/>
+    </property>
+  </property>
+  <property name="plugins" type="empty">
+    <property name="plugin-1" type="string" value="applicationsmenu">
+      <property name="custom-menu" type="bool" value="false"/>
+      <property name="show-tooltips" type="bool" value="true"/>
+      <property name="button-title" type="string" value="Menu"/>
+      <property name="button-icon" type="string" value="zoom-fit-best"/>
+    </property>
+    <property name="plugin-2" type="string" value="tasklist">
+      <property name="grouping" type="uint" value="1"/>
+    </property>
+    <property name="plugin-3" type="string" value="separator">
+      <property name="expand" type="bool" value="true"/>
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-4" type="string" value="pager">
+      <property name="rows" type="uint" value="1"/>
+      <property name="miniature-view" type="bool" value="false"/>
+    </property>
+    <property name="plugin-5" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-6" type="string" value="systray">
+      <property name="square-icons" type="bool" value="true"/>
+      <property name="known-legacy-items" type="array">
+        <value type="string" value="network"/>
+        <value type="string" value="blueman-tray"/>
+        <value type="string" value="mx-usb-unmounter"/>
+        <value type="string" value="networkmanager applet"/>
+      </property>
+      <property name="known-items" type="array">
+        <value type="string" value="TelegramDesktop"/>
+        <value type="string" value="Clementine"/>
+        <value type="string" value="nm-applet"/>
+        <value type="string" value="mx-usb-unmounter"/>
+        <value type="string" value="apt-notifier.py"/>
+        <value type="string" value="blueman"/>
+      </property>
+    </property>
+    <property name="plugin-8" type="string" value="pulseaudio">
+      <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
+      <property name="show-notifications" type="bool" value="true"/>
+      <property name="mpris-players" type="string" value="clementine;firefox.instance164899;firefox.instance16562;firefox.instance2984;firefox.instance3003;firefox.instance3032;firefox.instance3034;firefox.instance3035;firefox.instance3038;firefox.instance3042;firefox.instance3044;firefox.instance3089;firefox.instance3108;firefox.instance3125;firefox.instance3140;firefox.instance3145;firefox.instance3181;firefox.instance3194;firefox.instance3205;firefox.instance3207;firefox.instance3223;firefox.instance3235;firefox.instance3265;firefox.instance3292;firefox.instance3298;firefox.instance3943;firefox.instance4826;firefox.instance5292;firefox.instance5709;firefox.instance6081;firefox.instance6224"/>
+    </property>
+    <property name="plugin-10" type="string" value="notification-plugin"/>
+    <property name="plugin-11" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-12" type="string" value="clock"/>
+    <property name="plugin-7" type="string" value="xkb">
+      <property name="display-type" type="uint" value="2"/>
+      <property name="display-name" type="uint" value="1"/>
+      <property name="display-tooltip-icon" type="bool" value="true"/>
+      <property name="caps-lock-indicator" type="bool" value="true"/>
+      <property name="group-policy" type="uint" value="0"/>
+    </property>
+    <property name="plugin-9" type="string" value="xfce4-timer-plugin"/>
+    <property name="plugin-15" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-16" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-13" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-14" type="string" value="weather">
+      <property name="location" type="empty">
+        <property name="name" type="string" value="Padova, Veneto"/>
+        <property name="latitude" type="string" value="45.407717"/>
+        <property name="longitude" type="string" value="11.873446"/>
+      </property>
+      <property name="msl" type="int" value="25"/>
+      <property name="timezone" type="string" value="Europe/Rome"/>
+      <property name="offset" type="string" value="+01:00"/>
+      <property name="cache-max-age" type="int" value="172800"/>
+      <property name="power-saving" type="bool" value="true"/>
+      <property name="units" type="empty">
+        <property name="temperature" type="int" value="0"/>
+        <property name="pressure" type="int" value="0"/>
+        <property name="windspeed" type="int" value="0"/>
+        <property name="precipitation" type="int" value="0"/>
+        <property name="altitude" type="int" value="0"/>
+        <property name="apparent-temperature" type="int" value="0"/>
+      </property>
+      <property name="round" type="bool" value="true"/>
+      <property name="single-row" type="bool" value="true"/>
+      <property name="tooltip-style" type="int" value="0"/>
+      <property name="forecast" type="empty">
+        <property name="layout" type="int" value="1"/>
+        <property name="days" type="int" value="5"/>
+      </property>
+      <property name="theme-dir" type="string" value="/usr/share/xfce4/weather/icons/liquid-dark"/>
+      <property name="scrollbox" type="empty">
+        <property name="show" type="bool" value="true"/>
+        <property name="animate" type="bool" value="false"/>
+        <property name="lines" type="int" value="1"/>
+        <property name="color" type="string" value="rgba(0,0,0,0)"/>
+        <property name="use-color" type="bool" value="false"/>
+      </property>
+      <property name="labels" type="empty">
+        <property name="label0" type="int" value="3"/>
+      </property>
+    </property>
+  </property>
+</channel>

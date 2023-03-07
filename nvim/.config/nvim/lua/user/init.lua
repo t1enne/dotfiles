@@ -85,6 +85,8 @@ local config = {
       bg = "NONE",
     },
     highlights = function(hl) -- or a function that returns a new table of colors to set
+      local C = require("default_theme.colors")
+
       hl.Normal = { fg = C.fg, bg = C.bg }
       -- New approach instead of diagnostic_style
       hl.DiagnosticError.bold = true
@@ -132,20 +134,15 @@ local config = {
       -- control auto formatting on save
       format_on_save = {
         enabled = true, -- enable or disable format on save globally
-        filter = function(client)
-          if client.name == "tsserver" then
-            return false
-          end
-        end,
         allow_filetypes = { -- enable format on save for specified filetypes only
           -- "go",
         },
         ignore_filetypes = { -- disable format on save for specified filetypes
-          "typescript",
+          -- "python",
         },
       },
       disabled = { -- disable formatting capabilities for the listed language servers
-        -- "sumneko_lua",
+        "tsserver",
       },
       timeout_ms = 1000, -- default format timeout
       -- filter = function(client) -- fully override the default formatting function
@@ -169,9 +166,18 @@ local config = {
 
     -- Add overrides for LSP server settings, the keys are the name of the server
     ["server-settings"] = {
-      denols = { -- override table for require("lspconfig").[servername].setup({...})
-        root_dir = require("lspconfig").util.root_pattern("deno.json", "deno.jsonc"),
-      },
+      -- example for addings schemas to yamlls
+      -- yamlls = { -- override table for require("lspconfig").yamlls.setup({...})
+      --   settings = {
+      --     yaml = {
+      --       schemas = {
+      --         ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*.{yml,yaml}",
+      --         ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+      --         ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
+      --       },
+      --     },
+      --   },
+      -- },
     },
   },
   -- Mapping data with "desc" stored directly by vim.keymap.set().
@@ -222,25 +228,17 @@ local config = {
       -- },
     },
     -- All other entries override the require("<key>").setup({...}) call for default plugins
-    ["null-ls"] = function(config) -- overrides `require("null-ls").setup(config)`
+    ["null-ls"] = function(config)
       local null_ls = require("null-ls")
-      -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/formatting
-      -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/diagnostics
       config.sources = {}
-      -- null_ls.builtins.formatting.rome, -- will use the source for all supported file types
-      -- null_ls.builtins.formatting.prettier_d_slim
-      -- prettier_d_slim = function()
-      --   local null_ls = require("null-ls")
       null_ls.register(null_ls.builtins.formatting.prettier_d_slim.with({
-        -- condition = function(utils)
-        --   return utils.root_has_file(".prettierrc")
-        --       or utils.root_has_file(".prettierrc.json")
-        --       or utils.root_has_file(".prettierrc.js")
-        -- end,
+        condition = function(utils)
+          return utils.root_has_file(".prettierrc")
+              or utils.root_has_file(".prettierrc.json")
+              or utils.root_has_file(".prettierrc.js")
+        end,
       }))
-      -- end,
-
-      return config -- return final config table
+      return config
     end,
     treesitter = { -- overrides `require("treesitter").setup(...)`
       ensure_installed = { "lua", "typescript", "go", "help" },
@@ -309,7 +307,7 @@ local config = {
     -- -- Customize attributes of highlighting in Heirline components
     -- attributes = {
     --   -- styling choices for each heirline element, check possible attributes with `:h attr-list`
-    --   git_branch = { bold = true }, -- bold the git branch statusline component
+    git_branch = { bold = true }, -- bold the git branch statusline component
     -- },
     -- -- Customize if icons should be highlighted
     -- icon_highlights = {
@@ -339,8 +337,8 @@ local config = {
   -- augroups/autocommands and custom filetypes also this just pure lua so
   -- anything that doesn't fit in the normal config locations above can go here
   polish = function()
-    local augroup = vim.api.nvim_create_augroup
-    local cmd = vim.api.nvim_create_autocmd
+    -- local augroup = vim.api.nvim_create_augroup
+    -- local cmd = vim.api.nvim_create_autocmd
     -- Set up custom filetypes
     -- vim.filetype.add {
     --   extension = {

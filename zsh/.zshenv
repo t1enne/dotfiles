@@ -15,7 +15,7 @@ export NNN_FIFO='tmp/nnn.fifo'
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 export DENO_INSTALL="$HOME/.deno"
-export GOROOT="$HOME/go"
+export GOROOT="$HOME/Downloads/Apps/go"
 export GOPATH="$GOROOT/bin"
 export GO111MODULE=on # needed for WAILS
 export PNPM_HOME="$HOME/.local/share/pnpm" # pnpm
