@@ -21,6 +21,7 @@ bspc rule -a Dunst state=floating
 bspc rule -a Clementine desktop='^4'
 bspc rule -a '*:*:Panel Preferences' state=floating
 bspc rule -a '*:*:Add New Items' state=floating
+bspc rule -a '*:*:Picture-in-Picture' state=floating
 bspc rule -a Pavucontrol state=floating
 
 # Border
