@@ -9,5 +9,5 @@ return {
   --     require("lsp_signature").setup()
   --   end,
   -- },
-  { "wellle/context.vim", lazy = false },
+  { "nvim-treesitter/nvim-treesitter-context", lazy = false },
 }
