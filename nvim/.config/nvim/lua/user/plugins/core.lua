@@ -4,7 +4,7 @@ return {
     "goolord/alpha-nvim",
     opts = function(_, opts)
       -- customize the dashboard header
-      opts.section.header.val = { "Welcome t1enne" }
+      opts.section.header.val = { "Welcome back t1enne!" }
       return opts
     end,
   },

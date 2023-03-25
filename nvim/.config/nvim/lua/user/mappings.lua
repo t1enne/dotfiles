@@ -29,5 +29,6 @@ return {
     ["s("] = { "c()<ESC>hpl", desc = "Surround with" },
     ["s'"] = { "c''<ESC>hpl", desc = "Surround with" },
     ['s"'] = { 'c""<ESC>hpl', desc = "Surround with" },
+    ["s<"] = { "c<><ESC>hpl", desc = "Surround with" },
   },
 }
