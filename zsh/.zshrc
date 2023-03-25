@@ -52,7 +52,7 @@ ENABLE_CORRECTION="false"
 plugins=(
   git
   jira
-  vi-mode
+  # vi-mode
   # zsh-autocomplete
   # zsh-autosuggestions
   # web-search
@@ -82,25 +82,36 @@ alias jirah="cat ~/.oh-my-zsh/plugins/jira/README.md"
 # Confs
 alias zc="$EDITOR $DOTFILES/zsh/.zshrc"
 alias zs="source ~/.zshrc"
+
 alias tmuxc="$EDITOR $DOTFILES/tmux/.tmux.conf"
 alias wmc="$EDITOR $DOTFILES/bspwm/.config/bspwm/bspwmrc"
 alias keybinds="$EDITOR $DOTFILES/sxhkd/.config/sxhkd/sxhkdrc"
 alias kc="$EDITOR $DOTFILES/kitty/.config/kitty/kitty.conf"
-alias stowc="cd $DOTFILES;stow */ -t $HOME;cd -"
+alias picomc="$EDITOR $DOTFILES/picom/.config/picom/picom.conf"
 
 alias cc="clear"
 alias cdl="cd $HOME/Downloads"
 alias cdocs="cd $HOME/Documents"
 
-alias gtar="git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done"
+function gtar() {
+  for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done
+}
 
 # ccode rust | deno | node etc.
 function ccode() {
+  p=$HOME/Documents/code
   if [[ -n $1 ]]; then
-    cd $HOME/Documents/code/$1*
-  else 
-    cd $HOME/Documents/code
+    p=$p/$1
   fi
+  cd $p*
+}
+
+function query_xrdb() {
+  xrdb -query | grep -w $1 | awk '{ print $2}'
+}
+
+function ntf() {
+  $@ && notify-send "Task done:\n$@"
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
