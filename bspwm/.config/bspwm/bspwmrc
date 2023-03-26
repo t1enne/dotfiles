@@ -39,7 +39,10 @@ ksuperkey -e 'Super_R=Alt_L|F1' &
 
 # Autostart Scripts:
 # Keybinds
-echo ~/.config/sxhkd/sxhkdrc | entr -np pkill -USR1 -x sxhkd &
+-pgrep -x sxhkd > /dev/null || sxhkd &
+-killall -9 sxhkd ksuperkey
+-sxhkd &
+# echo ~/.config/sxhkd/sxhkdrc | entr -np pkill -USR1 -x sxhkd &
 
 # Bar
 pgrep -x xfce4-panel > /dev/null || xfce4-panel -d &
