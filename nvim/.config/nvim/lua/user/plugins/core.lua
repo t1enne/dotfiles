@@ -8,6 +8,15 @@ return {
       return opts
     end,
   },
+  {
+    "lewis6991/gitsigns.nvim",
+    opts = function(_, opts)
+      opts = {
+        current_line_blame = true,
+      }
+      return opts
+    end,
+  },
   -- You can disable default plugins as follows:
   -- { "max397574/better-escape.nvim", enabled = false },
   --
