@@ -97,6 +97,10 @@ function gtar() {
   for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done
 }
 
+function gtr() {
+  gco --track `git branch -r | fzf`
+}
+
 # ccode rust | deno | node etc.
 function ccode() {
   p=$HOME/Documents/code
