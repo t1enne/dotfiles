@@ -63,7 +63,7 @@ super + {_,shift + }c
 
 # Reload Keybindings
 super + escape
-	pkill -USR1 -x sxhkd
+	pkill -x sxhkd; sxhkd &
 
 # kill window
 ctrl + alt + Escape
