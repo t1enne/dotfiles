@@ -1,22 +1,21 @@
 #! /bin/sh
 
-if [[ $(xrandr -q | grep "HDMI-A-0 connected") ]];
-then
-  MON="HDMI-A-0"
-  xrandr --output $MON --primary --mode 1680x1050 --pos 0x0 --rotate normal
+if [[ $(xrandr -q | grep "HDMI-A-0 connected") ]]; then
+	MON="HDMI-A-0"
+	xrandr --output $MON --primary --mode 1680x1050 --pos 0x0 --rotate normal
 fi
 
-bspc monitor -d 󰈹   󰇮  󰃂  
+bspc monitor -d 1 2 3 4 5
 
-bspc config border_width         1
-bspc config window_gap           5
+bspc config border_width 1
+bspc config window_gap 5
 
-bspc config top_padding          40
-bspc config left_padding         0
-bspc config right_padding        0
-bspc config split_ratio          0.5
-bspc config borderless_monocle   true
-bspc config gapless_monocle      true
+bspc config top_padding 40
+bspc config left_padding 0
+bspc config right_padding 0
+bspc config split_ratio 0.5
+bspc config borderless_monocle true
+bspc config gapless_monocle true
 bspc config pointer_follows_focus true
 bspc config focus_follows_pointer true
 
@@ -31,21 +30,21 @@ bspc rule -a '*:*:Picture-in-Picture' state=floating
 bspc rule -a Pavucontrol state=floating
 
 # Border
-bspc config normal_border_color         "$(xrdb -query | grep -w color4 | awk '{ print $2}')"
-bspc config focused_border_color         "$(xrdb -query | grep -w cursorColor | awk '{ print $2}')"
+bspc config normal_border_color "$(xrdb -query | grep -w color4 | awk '{ print $2}')"
+bspc config focused_border_color "$(xrdb -query | grep -w cursorColor | awk '{ print $2}')"
 
 ksuperkey -e 'Super_L=Alt_L|F1' &
 ksuperkey -e 'Super_R=Alt_L|F1' &
 
 # Autostart Scripts:
 # Keybinds
--pgrep -x sxhkd > /dev/null || sxhkd &
--killall -9 sxhkd ksuperkey
--sxhkd &
+pgrep -x sxhkd >/dev/null || sxhkd &
+killall -9 sxhkd ksuperkey
+sxhkd &
 # echo ~/.config/sxhkd/sxhkdrc | entr -np pkill -USR1 -x sxhkd &
 
 # Bar
-pgrep -x xfce4-panel > /dev/null || xfce4-panel -d &
+pgrep -x xfce4-panel >/dev/null || xfce4-panel -d &
 killall -9 xfce4-panel
 xfce4-panel -d &
 
@@ -62,7 +61,7 @@ feh --randomize --bg-fill ~/Pictures/wallpapers &
 # Polkit
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 # Picom
-picom &
+# picom &
 # Network Applet
 nm-applet --indicator &
 # Cursor
