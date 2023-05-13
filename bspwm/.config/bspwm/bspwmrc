@@ -7,10 +7,10 @@ fi
 
 bspc monitor -d 1 2 3 4 5
 
-bspc config border_width 1
+bspc config border_width 2
 bspc config window_gap 5
 
-bspc config top_padding 40
+bspc config top_padding 37
 bspc config left_padding 0
 bspc config right_padding 0
 bspc config split_ratio 0.5
@@ -41,16 +41,21 @@ ksuperkey -e 'Super_R=Alt_L|F1' &
 pgrep -x sxhkd >/dev/null || sxhkd &
 killall -9 sxhkd ksuperkey
 sxhkd &
-# echo ~/.config/sxhkd/sxhkdrc | entr -np pkill -USR1 -x sxhkd &
 
 # Bar
 pgrep -x xfce4-panel >/dev/null || xfce4-panel -d &
 killall -9 xfce4-panel
 xfce4-panel -d &
 
-# Notifications
-# xfce4-notifyd-start &
-
+# Polkit
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+# Network Applet
+nm-applet --indicator &
+# Cursor
+xsetroot -cursor_name left_ptr &
+# Picom
+killall -9 picom
+picom &
 # Dunst
 killall -9 dunst
 dunst &
@@ -58,11 +63,3 @@ dunst &
 setxkbmap -option grp:alt_shift_toggle us,it
 # BG
 feh --randomize --bg-fill ~/Pictures/wallpapers &
-# Polkit
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-# Picom
-# picom &
-# Network Applet
-nm-applet --indicator &
-# Cursor
-xsetroot -cursor_name left_ptr &

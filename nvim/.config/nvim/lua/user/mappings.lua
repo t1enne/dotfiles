@@ -16,6 +16,14 @@ return {
     ["<C-u>"] = { "<C-u>zz" },
     ["n"] = { "nzz" },
     ["N"] = { "Nzz" },
+    ["<C-q>"] = function(bufnr)
+      require("telescope.actions").smart_send_to_qflist(bufnr)
+      require("telescope.builtin").quickfix()
+    end,
+    ["[q"] = { ":cprev<cr>" },
+    ["]q"] = { ":cnext<cr>" },
+    ["[Q"] = { ":cfirst<cr>" },
+    ["]Q"] = { ":clast<cr>" },
   },
   t = {
     -- setting a mapping to false will disable it
