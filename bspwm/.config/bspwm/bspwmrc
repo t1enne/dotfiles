@@ -7,8 +7,8 @@ fi
 
 bspc monitor -d 1 2 3 4 5
 
-bspc config border_width 2
-bspc config window_gap 5
+bspc config border_width 1
+bspc config window_gap 8
 
 bspc config top_padding 37
 bspc config left_padding 0
