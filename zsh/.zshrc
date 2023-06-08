@@ -73,7 +73,7 @@ alias add="sudo apt install"
 alias remove="sudo apt remove"
 alias update="sudo apt update"
 alias lg="lazygit"
-alias 3n="nnn -a"
+alias 3n="nnn -ae"
 alias python="python3"
 
 # Jira
@@ -94,6 +94,7 @@ alias cdl="cd $HOME/Downloads"
 alias cdocs="cd $HOME/Documents"
 
 function gtar() {
+  # tracks all remotes, including deleted ones
   for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done
 }
 
