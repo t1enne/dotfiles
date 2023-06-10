@@ -1,15 +1,26 @@
 return {
-  -- You can also add new plugins here as well:
-  -- Add plugins, the lazy syntax
-  -- "andweeb/presence.nvim",
-  -- {
-  --   "ray-x/lsp_signature.nvim",
-  --   event = "BufRead",
-  --   config = function()
-  --     require("lsp_signature").setup()
-  --   end,
-  -- },
+  { "akinsho/toggleterm.nvim", enabled = false },
+  { "nvim-neo-tree/neo-tree.nvim", enabled = false },
+  { "s1n7ax/nvim-window-picker", enabled = false },
+  { "famiu/bufdelete.nvim", enabled = false },
   { "nvim-treesitter/nvim-treesitter-context", lazy = false },
+  {
+    "mcchrish/nnn.vim",
+    config = function(plugin, opts)
+      require("nnn").setup {
+        command = "nnn -ao -AC",
+        set_default_mappings = 0,
+        replace_netrw = 1,
+        action = {
+          ["<c-t>"] = "tab split",
+          ["<c-s>"] = "split",
+          ["<c-v>"] = "vsplit",
+          -- ["<c-o>"] = copy_to_clipboard,
+        },
+      }
+    end,
+    cmd = { "NnnPicker", "NnnExplorer" },
+  },
   {
     "mbbill/undotree",
     keys = {
@@ -20,18 +31,16 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
       "jose-elias-alvarez/typescript.nvim",
-      -- init = function() end,
+      init = function()
+        -- vim.keymap.set("n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
+        -- vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
+      end,
     },
     ---@class PluginLspOpts
     opts = {
-      ---@type lspconfig.options
       servers = {
-        -- tsserver will be automatically installed with mason and loaded with lspconfig
         tsserver = {},
       },
-      -- you can do any additional lsp server setup here
-      -- return true if you don't want this server to be setup with lspconfig
-      ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         tsserver = function(_, opts)
           require("typescript").setup { server = opts }

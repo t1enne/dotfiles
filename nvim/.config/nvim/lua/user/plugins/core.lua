@@ -1,5 +1,4 @@
 return {
-  { "nvim-neo-tree/neo-tree.nvim", enabled = true },
   -- customize alpha options
   {
     "goolord/alpha-nvim",

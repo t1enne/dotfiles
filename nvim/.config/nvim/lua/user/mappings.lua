@@ -9,6 +9,7 @@ return {
     ["<leader>b"] = { name = "Buffers" },
     ["<leader>bn"] = { "<cmd>tabnew<cr>", desc = "New tab" },
     ["<leader>bd"] = { "<cmd>bd<cr>", desc = "Close tab" },
+    ["<leader>e"] = { "<cmd>NnnExplorer<cr>", desc = "Open nnn Explorer" },
     ["<C-s>"] = { ":w!<cr>" },
     ["H"] = { ":bp<cr>" },
     ["L"] = { ":bn<cr>" },
