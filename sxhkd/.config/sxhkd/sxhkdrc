@@ -11,7 +11,7 @@
 
 # Terminal (kitty)
 super + Return
-	kitty
+	kitty tmux new -As0
 
 # Terminal (floating)
 super + shift + Return
