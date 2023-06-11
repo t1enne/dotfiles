@@ -73,7 +73,7 @@ alias add="sudo apt install"
 alias remove="sudo apt remove"
 alias update="sudo apt update"
 alias lg="lazygit"
-alias 3n="nnn -ae"
+alias 3n="nnn -aeA"
 alias python="python3"
 
 # Jira
