@@ -17,6 +17,20 @@ return {
       "TmuxNavigatePrevious",
     },
   },
+  {
+    "Exafunction/codeium.vim",
+    lazy = false,
+    init = function()
+      vim.g.codeium_disable_bindings = 1
+      vim.g.codeium_idle_delay = 1500
+    end,
+    config = function()
+      vim.keymap.set("i", "<C-l>", function() return vim.fn["codeium#Accept"]() end, { expr = true })
+      vim.keymap.set("i", "<C-j>", function() return vim.fn["codeium#CycleCompletions"](1) end, { expr = true })
+      vim.keymap.set("i", "<C-k>", function() return vim.fn["codeium#CycleCompletions"](-1) end, { expr = true })
+      vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true })
+    end,
+  },
   -- {
   --   "mcchrish/nnn.vim",
   --   config = function(plugin, opts)
@@ -33,26 +47,4 @@ return {
   --   end,
   --   cmd = { "NnnPicker", "NnnExplorer" },
   -- },
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      "jose-elias-alvarez/typescript.nvim",
-      init = function()
-        -- vim.keymap.set("n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
-        -- vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
-      end,
-    },
-    ---@class PluginLspOpts
-    opts = {
-      servers = {
-        tsserver = {},
-      },
-      setup = {
-        tsserver = function(_, opts)
-          require("typescript").setup { server = opts }
-          return true
-        end,
-      },
-    },
-  },
 }
