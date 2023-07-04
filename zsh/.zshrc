@@ -41,7 +41,7 @@ alias keybinds="$EDITOR $DOTFILES/sxhkd/.config/sxhkd/sxhkdrc"
 alias kc="$EDITOR $DOTFILES/kitty/.config/kitty/kitty.conf"
 alias picomc="$EDITOR $DOTFILES/picom/.config/picom/picom.conf"
 
-alias cc="clear"
+alias cl="clear"
 alias cdl="cd $HOME/Downloads"
 alias cdocs="cd $HOME/Documents"
 
@@ -61,6 +61,13 @@ function ccode() {
     p=$p/$1
   fi
   cd $p*
+}
+
+function monitor() {
+  file=$1
+  cmd=$2
+  
+  while inotifywait -e close_write $file; do eval $cmd; done
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

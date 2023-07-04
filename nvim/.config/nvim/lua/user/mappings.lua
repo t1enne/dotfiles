@@ -32,6 +32,8 @@ return {
     ["]q"] = { ":cnext<cr>" },
     ["[Q"] = { ":cfirst<cr>" },
     ["]Q"] = { ":clast<cr>" },
+    ["<C-n>"] = { "O<esc>" },
+    ["<C-m>"] = { "o<esc>" },
   },
   t = {
     -- setting a mapping to false will disable it
