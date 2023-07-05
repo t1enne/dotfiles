@@ -6,7 +6,6 @@ return {
   { "nvim-treesitter/nvim-treesitter-context", lazy = false },
   { "mbbill/undotree", cmd = { "UndotreeToggle" } },
   { "mrjones2014/smart-splits.nvim", enabled = false },
-  { "rebelot/kanagawa.nvim", lazy = false },
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
