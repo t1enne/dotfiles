@@ -9,7 +9,8 @@ return {
     ["<leader>b"] = { name = "Buffers" },
     ["<leader>bn"] = { "<cmd>tabnew<cr>", desc = "New tab" },
     ["<leader>bd"] = { "<cmd>bd<cr>", desc = "Close tab" },
-    -- ["<leader>n"] = { "<cmd>NnnPicker %:p:h<cr>", desc = "Open nnn Picker" },
+    ["<leader>nn"] = { "<cmd>AerialNavToggle<cr>", desc = "Toggle AerialNav" },
+    ["<leader>ns"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Aerial" },
     ["<leader>ee"] = { "<cmd>silent Explore %:p:h<cr>", desc = "Open netrw" },
     ["<leader>ed"] = { "<cmd>silent Explore<cr>", desc = "Open netrw" },
     ["<leader><F5>"] = { "<cmd>UndotreeToggle<cr>", desc = "Toggle UndoTree" },
@@ -28,6 +29,7 @@ return {
       require("telescope.actions").smart_send_to_qflist(bufnr)
       require("telescope.builtin").quickfix()
     end,
+    -- ["<leader>q"] = { "<cmd>silent bd<cr>", desc = "Quit buffer" },
     ["[q"] = { ":cprev<cr>" },
     ["]q"] = { ":cnext<cr>" },
     ["[Q"] = { ":cfirst<cr>" },
@@ -36,17 +38,11 @@ return {
     ["<C-m>"] = { "o<esc>" },
   },
   t = {
-    -- setting a mapping to false will disable it
-    -- ["<esc>"] = false,
+    ["<esc>"] = { "<Esc> <C-\\><C-n>" },
+    ["<leader>c"] = { "<cmd>silent bd!<cr>" },
   },
   x = {
     ["J"] = { ":m '>+1<CR>gv=gv", desc = "Move line down" },
     ["K"] = { ":m '>-2<CR>gv=gv", desc = "Move line up" },
-    ["s["] = { "c[]<ESC>hpl", desc = "Surround with" },
-    ["s{"] = { "c{}<ESC>hpl", desc = "Surround with" },
-    ["s("] = { "c()<ESC>hpl", desc = "Surround with" },
-    ["s'"] = { "c''<ESC>hpl", desc = "Surround with" },
-    ['s"'] = { 'c""<ESC>hpl', desc = "Surround with" },
-    ["s<"] = { "c<><ESC>hpl", desc = "Surround with" },
   },
 }

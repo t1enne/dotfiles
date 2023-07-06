@@ -1,3 +1,6 @@
+vim.g.netrw_winsize = 25
+vim.g.netrw_banner = 0
+
 return {
   -- Configure AstroNvim updates
   updater = {
@@ -17,7 +20,7 @@ return {
     },
   },
   -- Set colorscheme to use
-  colorscheme = "astrodark",
+  colorscheme = "catppuccin",
   -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
   diagnostics = {
     virtual_text = true,

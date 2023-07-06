@@ -1,11 +1,11 @@
 return {
-  { "akinsho/toggleterm.nvim", enabled = false },
-  { "nvim-neo-tree/neo-tree.nvim", enabled = false },
-  { "s1n7ax/nvim-window-picker", enabled = false },
-  { "famiu/bufdelete.nvim", enabled = false },
+  { "akinsho/toggleterm.nvim",                 enabled = false },
+  { "nvim-neo-tree/neo-tree.nvim",             enabled = false },
+  { "s1n7ax/nvim-window-picker",               enabled = false },
+  { "famiu/bufdelete.nvim",                    enabled = false },
   { "nvim-treesitter/nvim-treesitter-context", lazy = false },
-  { "mbbill/undotree", cmd = { "UndotreeToggle" } },
-  { "mrjones2014/smart-splits.nvim", enabled = false },
+  { "mbbill/undotree",                         cmd = { "UndotreeToggle" } },
+  { "mrjones2014/smart-splits.nvim",           enabled = false },
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
@@ -30,6 +30,7 @@ return {
       vim.keymap.set("i", "<C-x>", function() return vim.fn["codeium#Clear"]() end, { expr = true })
     end,
   },
+  { "tpope/vim-surround", lazy = false },
   -- {
   --   "mcchrish/nnn.vim",
   --   config = function(plugin, opts)
