@@ -44,6 +44,7 @@ alias picomc="$EDITOR $DOTFILES/picom/.config/picom/picom.conf"
 alias cl="clear"
 alias cdl="cd $HOME/Downloads"
 alias cdocs="cd $HOME/Documents"
+alias dots="cd $DOTFILES"
 
 function gtar() {
   # tracks all remotes, including deleted ones
