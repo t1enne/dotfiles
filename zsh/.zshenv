@@ -8,7 +8,7 @@ export JIRA_PREFIX="UPR-"
 export JIRA_DEFAULT_ACTION="dashboard"
 # export JIRA_RAPID_BOARD=""
 
-export NNN_PLUG='p:preview-tui'
+export NNN_PLUG='p:preview-tui;f:finder;v:imgview'
 export NNN_FCOLORS=''
 export NNN_FIFO='tmp/nnn.fifo'
 
@@ -19,7 +19,7 @@ export GOROOT="$HOME/Downloads/Apps/go"
 export GOPATH="$GOROOT/bin"
 export GO111MODULE=on # needed for WAILS
 export PNPM_HOME="$HOME/.local/share/pnpm" # pnpm
-export DOTFILES="$HOME/.dotfiles"
+export DOTS="$HOME/.dotfiles"
 
 eval "$(luarocks path)" # eval needed for lua 
 

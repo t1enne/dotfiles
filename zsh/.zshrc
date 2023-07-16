@@ -32,19 +32,19 @@ alias python="python3"
 alias jirah="cat ~/.oh-my-zsh/plugins/jira/README.md"
 
 # Confs
-alias zc="$EDITOR $DOTFILES/zsh/.zshrc"
+alias zc="$EDITOR $DOTS/zsh/.zshrc"
 alias zs="source ~/.zshrc"
 
-alias tmuxc="$EDITOR $DOTFILES/tmux/.tmux.conf"
-alias wmc="$EDITOR $DOTFILES/bspwm/.config/bspwm/bspwmrc"
-alias keybinds="$EDITOR $DOTFILES/sxhkd/.config/sxhkd/sxhkdrc"
-alias kc="$EDITOR $DOTFILES/kitty/.config/kitty/kitty.conf"
-alias picomc="$EDITOR $DOTFILES/picom/.config/picom/picom.conf"
+alias tmuxc="$EDITOR $DOTS/tmux/.tmux.conf"
+alias wmc="$EDITOR $DOTS/bspwm/.config/bspwm/bspwmrc"
+alias keybinds="$EDITOR $DOTS/sxhkd/.config/sxhkd/sxhkdrc"
+alias kc="$EDITOR $DOTS/kitty/.config/kitty/kitty.conf"
+alias picomc="$EDITOR $DOTS/picom/.config/picom/picom.conf"
 
 alias cl="clear"
 alias cdl="cd $HOME/Downloads"
 alias cdocs="cd $HOME/Documents"
-alias dots="cd $DOTFILES"
+alias dots="cd $DOTS"
 
 function gtar() {
   # tracks all remotes, including deleted ones
