@@ -6,6 +6,7 @@ return {
   { "nvim-treesitter/nvim-treesitter-context", lazy = false },
   { "mbbill/undotree",                         cmd = { "UndotreeToggle" } },
   { "mrjones2014/smart-splits.nvim",           enabled = false },
+  { "tpope/vim-surround",                      lazy = false },
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
@@ -28,7 +29,6 @@ return {
       vim.keymap.set("i", "<C-d>", function() return vim.fn["codeium#CycleCompletions"](1) end, { expr = true })
     end,
   },
-  { "tpope/vim-surround", lazy = false },
   {
     "mcchrish/nnn.vim",
     config = function(plugin, opts)
@@ -46,4 +46,5 @@ return {
     end,
     cmd = { "NnnPicker" },
   },
+  { "ckipp01/nvim-jenkinsfile-linter", requires = { "nvim-lua/plenary.nvim" }, lazy = false },
 }

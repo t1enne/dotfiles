@@ -21,6 +21,12 @@ export GO111MODULE=on # needed for WAILS
 export PNPM_HOME="$HOME/.local/share/pnpm" # pnpm
 export DOTS="$HOME/.dotfiles"
 
+# Jenkins
+export JENKINS_USER_ID="nasrt"
+export JENKINS_URL="http://srv.raintonic.com:8080"
+export JENKINS_PASSWORD="rt"
+export JENKINS_INSECURE="true"
+
 eval "$(luarocks path)" # eval needed for lua 
 
 path+=("$HOME/.local/bin")
