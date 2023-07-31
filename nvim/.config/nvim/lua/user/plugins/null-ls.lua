@@ -7,11 +7,11 @@ return {
     opts.sources = {
       null_ls.builtins.formatting.stylua,
       null_ls.builtins.formatting.black,
-      null_ls.builtins.formatting.prettierd.with {
+      null_ls.builtins.formatting.prettier_d_slim.with {
         condition = function(utils)
           return utils.root_has_file ".prettierrc"
-            or utils.root_has_file ".prettierrc.json"
-            or utils.root_has_file ".prettierrc.js"
+              or utils.root_has_file ".prettierrc.json"
+              or utils.root_has_file ".prettierrc.js"
         end,
       },
       -- null_ls.builtins.diagnostics.eslint_d.with {
