@@ -74,3 +74,6 @@ function monitor() {
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# bun completions
+[ -s "/home/nasmx/.bun/_bun" ] && source "/home/nasmx/.bun/_bun"
