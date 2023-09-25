@@ -7,6 +7,7 @@ plugins=(
   git
   jira
   vi-mode
+  docker
   # zsh-autocomplete
   # zsh-autosuggestions
   # web-search
@@ -24,7 +25,7 @@ alias e="$EDITOR"
 alias add="sudo apt install"
 alias remove="sudo apt remove"
 alias update="sudo apt update"
-alias lg="lazygit"
+alias lg="exec lazygit"
 alias 3n="nnn -aeA"
 alias python="python3"
 
