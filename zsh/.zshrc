@@ -28,6 +28,7 @@ alias update="sudo apt update"
 alias lg="exec lazygit"
 alias 3n="nnn -aeA"
 alias python="python3"
+alias findf="find . -type f -name "
 
 # Jira
 alias jirah="cat ~/.oh-my-zsh/plugins/jira/README.md"
@@ -66,10 +67,14 @@ function ccode() {
 }
 
 function monitor() {
-  file=$1
-  cmd=$2
-  
-  while inotifywait -e close_write $file; do eval $cmd; done
+  file=$@:0:-1
+  cmd=$@:-1
+  echo "Files: $file"
+  echo "Cmd: $cmd"
+  # while inotifywait -e close_write $file; do eval $cmd; done
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# bun completions
+[ -s "/home/nasmx/.bun/_bun" ] && source "/home/nasmx/.bun/_bun"
