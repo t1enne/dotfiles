@@ -1,6 +1,7 @@
 source $HOME/.zshenv
 ZSH_THEME="fwalch"
 
+stty icrnl # fixes Enter appearing as ^M
 zstyle ':omz:update' mode auto      # update automatically without asking
 
 plugins=(
@@ -71,7 +72,7 @@ function monitor() {
   cmd=$@:-1
   echo "Files: $file"
   echo "Cmd: $cmd"
-  # while inotifywait -e close_write $file; do eval $cmd; done
+  while inotifywait -e close_write $file; do eval $cmd; done
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
