@@ -1,6 +1,7 @@
 vim.g.netrw_winsize = 25
 vim.g.netrw_banner = 0
-vim.g["nnn#layout"] = { window = { width = 0.9, height = 0.8, highlight = "Comment" } }
+vim.g.fff = { split_direction = "nosplitbelow nosplitright" }
+-- vim.g["nnn#layout"] = { window = { width = 0.9, height = 0.8, highlight = "Comment" } }
 
 return {
   -- Configure AstroNvim updates
@@ -21,7 +22,7 @@ return {
     },
   },
   -- Set colorscheme to use
-  colorscheme = "kanagawa",
+  -- colorscheme = "kanagawa",
   -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
   diagnostics = {
     virtual_text = true,

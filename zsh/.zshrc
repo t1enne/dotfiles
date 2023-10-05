@@ -27,7 +27,7 @@ alias add="sudo apt install"
 alias remove="sudo apt remove"
 alias update="sudo apt update"
 alias lg="lazygit"
-alias 3n="nnn -aeA"
+# alias 3n="nnn -aeA"
 alias python="python3"
 alias findf="find . -type f -name "
 
@@ -45,7 +45,7 @@ alias kc="$EDITOR $DOTS/kitty/.config/kitty/kitty.conf"
 alias picomc="$EDITOR $DOTS/picom/.config/picom/picom.conf"
 
 alias cl="clear"
-alias cdl="cd $HOME/Downloads"
+alias cdls="cd $HOME/Downloads"
 alias cdocs="cd $HOME/Documents"
 alias dots="cd $DOTS"
 
@@ -73,6 +73,11 @@ function monitor() {
   echo "Files: $file"
   echo "Cmd: $cmd"
   while inotifywait -e close_write $file; do eval $cmd; done
+}
+
+function f() {
+    fff "$@"
+    cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

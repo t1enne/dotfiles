@@ -5,6 +5,11 @@ if [[ $(xrandr -q | grep "HDMI-A-0 connected") ]]; then
 	xrandr --output $MON --primary --mode 1680x1050 --pos 0x0 --rotate normal
 fi
 
+if [[ $(xrandr -q | grep "HDMI-1 connected") ]]; then
+	MON="HDMI-1"
+	xrandr --output $MON --primary --mode 1920x1080 --pos 0x0 --rotate right
+fi
+
 bspc monitor -d 1 2 3 4 5
 
 bspc config border_width 1

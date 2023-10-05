@@ -29,22 +29,23 @@ return {
       vim.keymap.set("i", "<C-d>", function() return vim.fn["codeium#CycleCompletions"](1) end, { expr = true })
     end,
   },
-  {
-    "mcchrish/nnn.vim",
-    config = function(plugin, opts)
-      require("nnn").setup {
-        command = "nnn -ao -AC",
-        set_default_mappings = 0,
-        action = {
-          ["<c-t>"] = "tab split",
-          ["<c-s>"] = "split",
-          ["<c-v>"] = "vsplit",
-          ["<esc>"] = "<esc>i",
-          -- ["<c-o>"] = copy_to_clipboard,
-        },
-      }
-    end,
-    cmd = { "NnnPicker" },
-  },
+  { "dylanaraps/fff.vim",              cmd = "F" },
+  -- {
+  --   "mcchrish/nnn.vim",
+  --   config = function(plugin, opts)
+  --     require("nnn").setup {
+  --       command = "nnn -ao -AC",
+  --       set_default_mappings = 0,
+  --       action = {
+  --         ["<c-t>"] = "tab split",
+  --         ["<c-s>"] = "split",
+  --         ["<c-v>"] = "vsplit",
+  --         ["<esc>"] = "<esc>i",
+  --         -- ["<c-o>"] = copy_to_clipboard,
+  --       },
+  --     }
+  --   end,
+  --   cmd = { "NnnPicker" },
+  -- },
   { "ckipp01/nvim-jenkinsfile-linter", requires = { "nvim-lua/plenary.nvim" }, lazy = false },
 }
