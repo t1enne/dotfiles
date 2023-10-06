@@ -68,8 +68,8 @@ function ccode() {
 }
 
 function monitor() {
-  file=$@:0:-1
-  cmd=$@:-1
+  file=${@:1:1}
+  cmd=${@:2}
   echo "Files: $file"
   echo "Cmd: $cmd"
   while inotifywait -e close_write $file; do eval $cmd; done
