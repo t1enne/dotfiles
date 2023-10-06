@@ -10,30 +10,16 @@ TOTAL_HRS=0
 ACTIVITIES=(work organization bug notes)
 API_BASE="https://controllo-ore.herokuapp.com/api/"
 
-# Dependencies: jq, fzf
-hash jq 2>/dev/null || {
-	echo "Please install jq"
-	exit 1
-}
-
-hash fzf 2>/dev/null || {
-	echo "Please install fzf"
-	exit 1
-}
-
 function get_token() {
-	local url
 	local body
 	local username
-	local pwd
-	url="${API_BASE}users/login"
+	local password
 
 	read -rp "Input username: " username
-	read -rp "Input pwd: " pwd
-
-	# create json with username and pwd from global vars
-	body=$(echo -n "{\"username\":\"$username\",\"password\":\"$pwd\"}")
-	response=$(curl -s "$url" \
+	read -rp "Input password: " password
+	# create json with username and password from global vars
+	body=$(echo -n "{\"username\":\"$username\",\"password\":\"$password\"}")
+	response=$(curl -s "${API_BASE}users/login" \
 		-H 'Accept: application/json, text/plain, */*' \
 		-H 'Content-Type: application/json' \
 		--data-raw $"$body" \
@@ -48,12 +34,6 @@ RT_BEARER_TOKEN=\"$RT_BEARER_TOKEN\"
 EOF
 }
 
-# picks project and assigns via fzf
-# $1 list of current projs
-function pick_project() {
-	picked_proj="$(echo "$1" | jq -c '. | .order' | fzf)"
-}
-
 # update hrs on the server
 # $1 is the payload to the func
 function update_hrs() {
@@ -62,7 +42,6 @@ function update_hrs() {
 
 	url="${API_BASE}working-hours/$(date +%Y-%m-%d)"
 	body=$(echo "$1" | jq -r '. | { orderId, preference, organization, work, bug, newFeatures, commercial, graphics, notes, orderId }')
-
 	curl -s "$url" \
 		-H 'Accept: application/json, text/plain, */*' \
 		-H "Authorization: ${RT_BEARER_TOKEN}" \
@@ -71,49 +50,71 @@ function update_hrs() {
 		--compressed | jq '.'
 }
 
-if [ -f "$CACHE" ]; then
-	source "$CACHE"
-fi
-
-if [ -z "$RT_USER_ID" ]; then
-	# auth
-	get_token
-fi
-
-# fetch current projects
-echo "Getting current projects from ${API_BASE}"
-
-all_projs=$(curl -s "${API_BASE}working-hours/mask-by-day/$(date +%Y-%m-%d)" \
-	-H "Authorization: $RT_BEARER_TOKEN" |
-	jq -c '.')
-current_projs=$(echo "$all_projs" | jq -c '.data[] | select(.isEnded == false)')
-
-# prompt user
-pick_project "$current_projs"
-
-# assign order name
-picked_order_name="$picked_proj"
-picked_order=$(echo "$current_projs" | jq -c ". | select(.order == $picked_order_name)")
-picked_order_id=$(echo "$picked_order" | jq -r '.orderId')
-
-echo "Fill in the fields for $picked_order_name"
-
-for activity in "${ACTIVITIES[@]}"; do
-	read -rp "Input for field $activity: " input
-
-	if [ -z "$input" ]; then # if empty => continue;else => update JSON
-		continue
+function main() {
+	if [ -f "$CACHE" ]; then
+		source "$CACHE"
 	fi
-	# shellcheck disable=2001
-	if [ "$activity" != "notes" ]; then # if is NOT notes, insert raw val
-		TOTAL_HRS=$((TOTAL_HRS + input))
-		picked_order=$(echo "$picked_order" | jq --argjson update "{ \"$activity\": $input }" '. + $update')
-	else
-		picked_order=$(echo "$picked_order" | jq --argjson update "{\"notes\": \"$input\" }" '. + $update')
+
+	if [ -z "$RT_USER_ID" ]; then
+		# auth
+		get_token
 	fi
-done
 
-PREFERENCES="{\"preference\": { \"_id\": null, \"orderId\": \"$picked_order_id\", \"userId\": \"${RT_USER_ID}\"}}"
-picked_order=$(echo "$picked_order" | jq --argjson update "$PREFERENCES" '. + $update')
+	echo "Getting current projects from ${API_BASE}"
+	# fetch current projects
+	all_projs=$(curl -s "${API_BASE}working-hours/mask-by-day/$(date +%Y-%m-%d)" \
+		-H "Authorization: $RT_BEARER_TOKEN" | jq -c '.')
+	current_projs=$(echo "$all_projs" | jq -c '.data[] | select(.isEnded == false)')
 
-update_hrs "$picked_order"
+	# if TOTAL_HRS <= 8 keep prompting
+	while [ $TOTAL_HRS -lt 8 ]; do
+		echo "Hours left to input: $((8 - TOTAL_HRS))"
+		# prompt user
+		picked_proj="$(echo "$current_projs" | jq -c '. | .order' | fzf)"
+		if [ -z "$picked_proj" ]; then # exit if nothing chosen
+			echo "Nothing picked, exiting"
+			exit 0
+		fi
+		# assign order name
+		picked_order_name="$picked_proj"
+		picked_order=$(echo "$current_projs" | jq -c ". | select(.order == $picked_order_name)")
+		picked_order_id=$(echo "$picked_order" | jq -r '.orderId')
+
+		echo "Fill in the fields for $picked_order_name"
+
+		for activity in "${ACTIVITIES[@]}"; do
+			read -rp "Input for field $activity: " input
+
+			if [ -z "$input" ]; then # if empty => continue;else => update JSON
+				continue
+			fi
+			# shellcheck disable=2001
+			if [ "$activity" != "notes" ]; then # if is NOT notes, insert raw val
+				TOTAL_HRS=$((TOTAL_HRS + input))
+				picked_order=$(echo "$picked_order" | jq --argjson update "{ \"$activity\": $input }" '. + $update')
+			else
+				picked_order=$(echo "$picked_order" | jq --argjson update "{\"notes\": \"$input\" }" '. + $update')
+			fi
+		done
+
+		PREFERENCES="{\"preference\": { \"_id\": null, \"orderId\": \"$picked_order_id\", \"userId\": \"${RT_USER_ID}\"}}"
+		picked_order=$(echo "$picked_order" | jq --argjson update "$PREFERENCES" '. + $update')
+		update_hrs "$picked_order"
+	done
+}
+
+# Dependencies: jq, fzf
+hash jq 2>/dev/null || {
+	echo "Please install jq"
+	exit 1
+}
+
+hash fzf 2>/dev/null || {
+	echo "Please install fzf"
+	exit 1
+}
+
+# run main
+main
+echo "All done!"
+exit 0
