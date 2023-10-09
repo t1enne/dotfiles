@@ -11,7 +11,10 @@
 
 # Terminal (kitty)
 super + Return
-	kitty tmux new -As0
+	local index="$((`tmux list-session | wc -l` + 1))" && kitty tmux new -As$index && tmux send-keys -t $index.0 "cat ~/.cache/wal/sequences && source ~/.cache/wal/colors-tty/sh" 
+
+# To add support for TTYs this line can be optionally added.
+source ~/.cache/wal/colors-tty.sh
 
 # Terminal (floating)
 super + shift + Return
@@ -25,7 +28,7 @@ super + q
     $HOME/.config/rofi/scripts/powermenu.sh
 
 super + w
-		feh --randomize --bg-fill ~/Pictures/wallpapers &
+	local wall=`find $HOME/Pictures/wallpapers -type f -name '*' | rofi -dmenu -p 'Pick a wallpaper'` && feh --bg-fill $wall && wal -i $wall &
 
 # Color Picker
 super + ctrl + p
