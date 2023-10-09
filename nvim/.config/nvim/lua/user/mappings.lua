@@ -9,10 +9,8 @@ return {
     ["<leader>b"] = { name = "Buffers" },
     ["<leader>bn"] = { "<cmd>tabnew<cr>", desc = "New tab" },
     ["<leader>bd"] = { "<cmd>bd<cr>", desc = "Close tab" },
-    ["<leader>nn"] = { "<cmd>AerialNavToggle<cr>", desc = "Toggle AerialNav" },
-    ["<leader>ns"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Aerial" },
-    ["<leader>ee"] = { "<cmd>F %:p:h<cr>", desc = "Open nnn picker in current dir" },
-    ["<leader>ed"] = { "<cmd>F<cr>", desc = "Open nnn picker in $PWD" },
+    ["<leader>e"] = { "<cmd>F<cr>", desc = "Open fff picker in $PWD" },
+    ["<leader>E"] = { "<cmd>F %:p:h<cr>", desc = "Open fff picker in current dir" },
     ["<leader><F5>"] = { "<cmd>UndotreeToggle<cr>", desc = "Toggle UndoTree" },
     ["<C-k>"] = { "<cmd>TmuxNavigateUp<cr>", desc = "Navigate Split Up" },
     ["<C-l>"] = { "<cmd>TmuxNavigateLeft<cr>", desc = "Navigate Split Left" },
@@ -44,6 +42,7 @@ return {
   x = {
     ["J"] = { ":m '>+1<CR>gv=gv", desc = "Move line down" },
     ["K"] = { ":m '>-2<CR>gv=gv", desc = "Move line up" },
+    [">"] = { ">", desc = "Move line up" },
   },
   i = {
     ["<M-l>"] = { "<C-O>$" },

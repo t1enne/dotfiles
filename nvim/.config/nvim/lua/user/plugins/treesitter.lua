@@ -1,9 +1,8 @@
 return {
   "nvim-treesitter/nvim-treesitter",
   opts = {
-    ensure_installed = { "lua", "typescript", "go", "vim", "lua", "cmake" },
-    highlight = {
-      -- disable = { "go" },
+    ensure_installed = { "c", "query", "vim", "vimdoc", "lua", "typescript", "go", "vim", "lua", "cmake" },
+    highlight = { -- disable = { "go" }
     },
     matchup = { enable = true },
     indent = { enable = true, disable = { "python" } },

@@ -1,4 +1,9 @@
 return {
+  { "NMAC427/guess-indent.nvim",               enabled = false,           opts = {} },
+  { "stevearc/aerial.nvim",                    enabled = false,           opts = {} },
+  { "rebelot/heirline.nvim",                   enabled = false,           opts = {} },
+  { "echasnovski/mini.statusline",             version = false,           opts = {} },
+  { "echasnovski/mini.tabline",                version = false,           opts = {} },
   { "akinsho/toggleterm.nvim",                 enabled = false },
   { "nvim-neo-tree/neo-tree.nvim",             enabled = false },
   { "s1n7ax/nvim-window-picker",               enabled = false },
@@ -6,7 +11,7 @@ return {
   { "nvim-treesitter/nvim-treesitter-context", lazy = false },
   { "mbbill/undotree",                         cmd = { "UndotreeToggle" } },
   { "mrjones2014/smart-splits.nvim",           enabled = false },
-  { "tpope/vim-surround",                      lazy = false },
+  { "echasnovski/mini.surround",               version = false,           opts = {} },
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
@@ -18,34 +23,14 @@ return {
     },
   },
   {
-    "Exafunction/codeium.vim",
+    "Exafunction/codeium.nvim",
     lazy = false,
-    init = function()
-      vim.g.codeium_disable_bindings = 1
-      vim.g.codeium_idle_delay = 1500
-    end,
-    config = function()
-      vim.keymap.set("i", "<C-f>", function() return vim.fn["codeium#Accept"]() end, { expr = true })
-      vim.keymap.set("i", "<C-d>", function() return vim.fn["codeium#CycleCompletions"](1) end, { expr = true })
-    end,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "hrsh7th/nvim-cmp",
+    },
+    opts = {},
   },
   { "dylanaraps/fff.vim",              cmd = "F" },
-  -- {
-  --   "mcchrish/nnn.vim",
-  --   config = function(plugin, opts)
-  --     require("nnn").setup {
-  --       command = "nnn -ao -AC",
-  --       set_default_mappings = 0,
-  --       action = {
-  --         ["<c-t>"] = "tab split",
-  --         ["<c-s>"] = "split",
-  --         ["<c-v>"] = "vsplit",
-  --         ["<esc>"] = "<esc>i",
-  --         -- ["<c-o>"] = copy_to_clipboard,
-  --       },
-  --     }
-  --   end,
-  --   cmd = { "NnnPicker" },
-  -- },
   { "ckipp01/nvim-jenkinsfile-linter", requires = { "nvim-lua/plenary.nvim" }, lazy = false },
 }
