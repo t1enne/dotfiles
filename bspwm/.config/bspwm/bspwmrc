@@ -2,7 +2,7 @@
 
 if [[ $(xrandr -q | grep "HDMI-A-0 connected") ]]; then
 	MON="HDMI-A-0"
-	xrandr --output $MON --primary --mode 1680x1050 --pos 0x0 --rotate normal
+	xrandr --output $MON --primary --mode 1920x1080 --rate 240 --pos 0x0 --rotate normal
 fi
 
 if [[ $(xrandr -q | grep "HDMI-1 connected") ]]; then
@@ -13,7 +13,7 @@ fi
 bspc monitor -d 1 2 3 4 5
 
 bspc config border_width 1
-bspc config window_gap 8
+bspc config window_gap 15
 
 bspc config top_padding 37
 bspc config left_padding 0
@@ -66,5 +66,5 @@ killall -9 dunst
 dunst &
 # Kbd layouts
 setxkbmap -option grp:alt_shift_toggle us,it
-# BG
-feh --randomize --bg-fill ~/Pictures/wallpapers &
+BG_IMG="$HOME/Pictures/wallpapers/qwlacjbvlmo91.png"
+feh  --bg-fill "$BG_IMG"
