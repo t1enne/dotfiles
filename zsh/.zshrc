@@ -49,6 +49,11 @@ alias cdls="cd $HOME/Downloads"
 alias cdocs="cd $HOME/Documents"
 alias dots="cd $DOTS"
 
+function print_colors() {
+  for i in {0..255}; do
+      printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"
+  done
+}
 function gtar() {
   # tracks all remotes, including deleted ones
   for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done
@@ -84,3 +89,6 @@ function f() {
 
 # bun completions
 [ -s "/home/nasmx/.bun/_bun" ] && source "/home/nasmx/.bun/_bun"
+
+# opam configuration
+[[ ! -r /home/nasmx/.opam/opam-init/init.zsh ]] || source /home/nasmx/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
