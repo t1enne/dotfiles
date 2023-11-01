@@ -1,4 +1,18 @@
 return {
+  -- { "wuelnerdotexe/vim-astro", filetypes = { "astro" } },
+  {
+    "christoomey/vim-tmux-navigator",
+    events = { "VeryLazy" },
+    config = function() end,
+    keys = function()
+      return {
+        { "<C-h>", ":TmuxNavigateLeft<CR>", desc = "navigate to tmux left", mode = "n" },
+        { "<C-l>", ":TmuxNavigateRight<CR>", desc = "navigate to tmux right", mode = "n" },
+        { "<C-j>", ":TmuxNavigateDown<CR>", desc = "navigate to tmux down", mode = "n" },
+        { "<C-k>", ":TmuxNavigateUp<CR>", desc = "navigate to tmux up", mode = "n" },
+      }
+    end,
+  },
   { "echasnovski/mini.statusline", events = { "VeryLazy " }, version = false, opts = {} },
   { "echasnovski/mini.tabline", events = { "VeryLazy " }, version = false, opts = {} },
   {

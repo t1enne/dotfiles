@@ -28,7 +28,8 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
   },
   install = { colorscheme = { "kanagawa", "habamax" } },
-  checker = { enabled = true }, -- automatically check for plugin updates
+  checker = { enabled = false, notify = false }, -- automatically check for plugin updates
+  change_detection = { enabled = false },
   performance = {
     rtp = {
       -- disable some rtp plugins
@@ -45,6 +46,6 @@ require("lazy").setup({
     },
   },
 })
-
+require("telescope").load_extension("fzf")
 vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })

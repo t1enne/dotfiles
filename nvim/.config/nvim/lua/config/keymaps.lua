@@ -13,8 +13,8 @@ map("n", "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
 map("n", "<leader>e", ":F<cr>", { desc = "Open FFF in root dir" })
 map("n", "<leader>E", ":F %:p:h<cr>", { desc = "Open FFF in here" })
 
-map("n", "<leader>d", ":bd<CR>", { desc = "Close buffer" })
--- map("n", "<leader>l",  )
+map("n", "<leader>c", ":bd<CR>", { desc = "Close buffer" })
+
 map(
   "n",
   "<leader>/",
