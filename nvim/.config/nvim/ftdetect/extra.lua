@@ -1,6 +1,6 @@
-vim.filetype.add({
+vim.filetype.add {
   extension = {
-    njk = "html",
-    hbs = "html",
+    njk = 'html',
+    hbs = 'html',
   },
-})
+}
