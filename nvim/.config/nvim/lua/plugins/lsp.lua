@@ -3,14 +3,14 @@ return {
     "stevearc/conform.nvim",
     dependencies = { "mason.nvim", "williamboman/mason-lspconfig.nvim" },
     opts = function()
-      local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
+      -- local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
+      local is_prettier = require("lspconfig.util").root_pattern(".prettierrc")
       local ts_formatters = {}
-      if is_deno then
-        table.insert(ts_formatters, "deno_fmt")
-      else
-        table.insert(ts_formatters, "prettierd")
+
+      -- if is_deno then
+      --   table.insert(ts_formatters, "deno_fmt")
+      if is_prettier then
         table.insert(ts_formatters, "prettier")
-        table.insert(ts_formatters, "tsserver")
       end
 
       return {
@@ -19,6 +19,7 @@ return {
           sh = { "shfmt" },
           javascript = { ts_formatters },
           typescript = { ts_formatters },
+          html = { "prettier" },
           tsx = { ts_formatters },
         },
         format_on_save = {

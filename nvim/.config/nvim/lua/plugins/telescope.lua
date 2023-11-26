@@ -7,7 +7,8 @@ return {
     cmd = { "Telescope" },
     keys = function()
       return {
-        { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+        { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+        { "<leader>fF", "<cmd>Telescope git_files<cr>", desc = "Find git files" },
         { "<leader>fw", "<cmd>Telescope live_grep<cr>", desc = "Find word" },
         { "<leader>fb", "<cmd>Telescope <cr>", desc = "Find buffer" },
       }
@@ -43,6 +44,13 @@ return {
             TelescopePreviewBorder = { fg = "none", bg = "none" },
             TelescopePromptBorder = { fg = "none", bg = "none" },
             TelescopeResultsBorder = { fg = "none", bg = "none" },
+          },
+        },
+        pickers = {
+          live_grep = {
+            additional_args = function()
+              return { "--hidden" }
+            end,
           },
         },
       }

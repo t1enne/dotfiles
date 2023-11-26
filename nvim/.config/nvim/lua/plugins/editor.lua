@@ -59,26 +59,36 @@ return {
     opts = {},
   },
   {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
-    opts = {
-      indent = { char = "▏", tab_char = "▏" },
-      exclude = {
-        filetypes = {
-          "help",
-          "alpha",
-          "dashboard",
-          "neo-tree",
-          "Trouble",
-          "lazy",
-          "mason",
-          "notify",
-          "toggleterm",
-          "lazyterm",
-        },
-      },
-    },
+    "echasnovski/mini.indentscope",
+    version = "*",
+    events = { "VeryLazy" },
+    opts = {},
+    config = function()
+      -- require("mini.indentscope").gen_animation.none()
+    end,
   },
+  -- {
+  --   "lukas-reineke/indent-blankline.nvim",
+  --   main = "ibl",
+  --   opts = {
+  --     indent = { char = "▏", tab_char = "▏" },
+  --     exclude = {
+  --       filetypes = {
+  --         "json",
+  --         "help",
+  --         "alpha",
+  --         "dashboard",
+  --         "neo-tree",
+  --         "Trouble",
+  --         "lazy",
+  --         "mason",
+  --         "notify",
+  --         "toggleterm",
+  --         "lazyterm",
+  --       },
+  --     },
+  --   },
+  -- },
   {
     "folke/which-key.nvim",
     event = "VeryLazy",

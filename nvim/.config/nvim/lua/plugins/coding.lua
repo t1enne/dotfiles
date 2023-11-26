@@ -29,7 +29,7 @@ return {
   },
   {
     "tpope/vim-surround",
-    keys = { "ds", "cs", "ys", "ys", "yS", "yss", "yS", "yss" },
+    keys = { "ds", "cs", "ys", "ys", "yS", "yss" },
     version = false,
   },
   {
@@ -67,7 +67,7 @@ return {
     cmd = { "TSUpdateSync" },
     keys = {
       { "<c-space>", desc = "Increment selection" },
-      { "<bs>",      desc = "Decrement selection", mode = "x" },
+      { "<bs>", desc = "Decrement selection", mode = "x" },
     },
     ---@type TSConfig
     opts = {
@@ -80,7 +80,6 @@ return {
         "html",
         "javascript",
         "jsdoc",
-        "json",
         "lua",
         "luadoc",
         "luap",
@@ -138,14 +137,13 @@ return {
     },
   },
   {
-    'numToStr/Comment.nvim',
+    "numToStr/Comment.nvim",
     keys = {
       { "gc", mode = { "n", "v" }, desc = "Comment toggle linewise" },
       { "gb", mode = { "n", "v" }, desc = "Comment toggle blockwise" },
     },
     opts = function()
       return { pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook() }
-    end
-  }
-  ,
+    end,
+  },
 }
