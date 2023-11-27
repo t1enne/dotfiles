@@ -17,7 +17,7 @@ map('n', '<leader>E', ':F<cr>', { desc = 'Open FFF in root dir' })
 
 map('n', '<leader>c', ':bd<CR>', { desc = 'Close buffer' })
 
-map('n', '<leader>/', ":lua require('Comment.api').toggle.linewise.count(vim.v.count > 0 and vim.v.count or 1)<CR>", { desc = 'Toggle comment line' })
+map('n', '<leader>/', ":silent lua require('Comment.api').toggle.linewise.count(vim.v.count > 0 and vim.v.count or 1)<CR>", { desc = 'Toggle comment line' })
 map('v', '<leader>/', "<esc>:lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>", { desc = 'Toggle comment line' })
 
 -- better indents

@@ -33,7 +33,9 @@ export JENKINS_USER_ID="nasrt"
 export JENKINS_URL="http://srv.raintonic.com:8080"
 export JENKINS_PASSWORD="rt"
 export JENKINS_INSECURE="true"
-export OPENAI_API_KEY="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"
+
+# FFF
+export FFF_HIDDEN=1
 
 eval "$(luarocks path)" # eval needed for lua 
 
