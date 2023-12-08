@@ -22,7 +22,7 @@ return {
     },
     { 'williamboman/mason-lspconfig.nvim' },
     { 'hrsh7th/cmp-nvim-lsp' },
-    { 'j-hui/fidget.nvim', opts = {} },
+    { 'j-hui/fidget.nvim' },
   },
   opts = function()
     return {
