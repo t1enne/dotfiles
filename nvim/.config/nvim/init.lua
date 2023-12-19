@@ -1,15 +1,10 @@
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used) vim.g.mapleader = ' '
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.cmd.colorscheme 'lunaperche'
+
+vim.cmd.colorscheme 'retrobox'
 
 require 'keymaps'
-
-vim.opt.splitbelow = true
-vim.opt.splitright = true
--- vim.cmd.colorscheme 'aura-dark'
 
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -153,38 +148,6 @@ require('lazy').setup({
   },
 })
 
--- [[ Setting options ]]
--- See `:help vim.o`
--- NOTE: You can change these options as you wish!
-
--- Set highlight on search
-vim.o.hlsearch = false
--- Make line numbers default
-vim.wo.number = true
-vim.wo.relativenumber = true
--- Enable mouse mode
-vim.o.mouse = 'a'
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
--- Enable break indent
-vim.o.breakindent = true
--- Save undo history
-vim.o.undofile = true
--- Case-insensitive searching UNLESS \C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
--- Keep signcolumn on by default
-vim.wo.signcolumn = 'yes'
--- Decrease update time
-vim.o.updatetime = 250
-vim.o.timeoutlen = 300
--- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
--- NOTE: You should make sure your terminal supports this
-vim.o.termguicolors = true
-
 -- [[ Basic Keymaps ]]
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -284,11 +247,9 @@ local function live_grep_git_root()
 end
 
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
-
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader>fb', require('telescope.builtin').current_buffer_fuzzy_find, { desc = '[/] Fuzzily search in current buffer' })
-
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Find [G]it [F]iles' })
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
 vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
