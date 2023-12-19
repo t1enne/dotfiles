@@ -28,13 +28,17 @@ vim.o.timeoutlen = 300
 vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
 vim.opt.tabstop = 2
+
 vim.opt.shiftwidth = 2
-vim.opt.noswapfile = true
-vim.opt.undofile = true
-vim.opt.nowrap = true
+
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+vim.cmd [[
+	set noswapfile
+	set nowrap
+]]
 
 return {
   {
@@ -124,6 +128,7 @@ return {
           typescript = { ts_formatters },
           html = { 'prettier' },
           tsx = { ts_formatters },
+          python = { 'black' },
         },
         format_on_save = {
           timeout_ms = 500,
