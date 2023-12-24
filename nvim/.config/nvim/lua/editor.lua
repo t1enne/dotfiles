@@ -122,11 +122,12 @@ return {
 
       return {
         formatters_by_ft = {
+          html = { 'prettier' },
           lua = { 'stylua' },
           sh = { 'shfmt' },
+          python = { 'black' },
           javascript = { ts_formatters },
           typescript = { ts_formatters },
-          html = { 'prettier' },
           tsx = { ts_formatters },
           python = { 'black' },
         },
