@@ -48,6 +48,7 @@ path+=("$HOME/.yarn/bin")
 path+=("$HOME/.node/bin")
 path+=("$HOME/.config/yarn/global/node_modules/.bin")
 path+=("$PNPM_HOME:$PATH")
+path+=("$HOME/.nimble/bin")
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -66,3 +67,4 @@ fi
 
 # bun completions
 [ -s "/home/nasrt/.bun/_bun" ] && source "/home/nasrt/.bun/_bun"
+. "$HOME/.cargo/env"
