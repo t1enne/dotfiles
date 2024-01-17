@@ -2,8 +2,8 @@ local function map(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, opts)
 end
 
-map('x', '<A-j>', '<esc><cmd>m .+1<cr>==gi', { desc = 'Move down' })
-map('x', '<A-k>', '<esc><cmd>m .-2<cr>==gi', { desc = 'Move up' })
+map('x', 'J', ':m .+1<cr>gv=gv', { desc = 'Move down' })
+map('x', 'K', ':m .-2<cr>gv=gv', { desc = 'Move up' })
 -- navigation
 map('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up' })
 map('n', '<C-d>', '<C-d>zz', { desc = 'Scroll down' })
