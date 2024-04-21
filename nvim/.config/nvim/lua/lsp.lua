@@ -40,7 +40,13 @@ return {
       autoformat = true,
       format = { formatting_options = nil, timeout_ms = nil },
       servers = {},
-      setup = {},
+      setup = {
+        rust_analyzer = {
+          diagnostics = {
+            enable = true,
+          },
+        },
+      },
     }
   end,
   config = function(_, opts) end,
