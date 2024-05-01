@@ -38,9 +38,17 @@ vim.opt.splitright = true
 vim.cmd [[
 	set noswapfile
 	set nowrap
+	iab lmd <C-v>u03bb
 ]]
 
 return {
+  {
+    'jacoborus/tender.vim',
+    lazy = false,
+    config = function()
+      vim.cmd 'colorscheme tender'
+    end,
+  },
   {
     'tpope/vim-surround',
     keys = { 'ds', 'cs', 'ys', 'ys', 'yS', 'yss' },

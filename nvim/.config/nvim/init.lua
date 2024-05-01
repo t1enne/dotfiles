@@ -2,8 +2,6 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-vim.cmd.colorscheme 'lunaperche'
-
 require 'keymaps'
 require 'autocommands'
 
