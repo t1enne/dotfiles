@@ -42,16 +42,15 @@ vim.cmd [[
 ]]
 
 return {
+  { 'jaawerth/fennel.vim', ft = { 'fennel' } },
+  { 'Olical/conjure', ft = { 'rkt', 'racket' } },
+  { 'echasnovski/mini.surround', events = { 'VeryLazy' }, opts = { n_lines = 10, search_method = 'cover_or_next' } },
   {
     'jacoborus/tender.vim',
     lazy = false,
     config = function()
       vim.cmd 'colorscheme tender'
     end,
-  },
-  {
-    'tpope/vim-surround',
-    keys = { 'ds', 'cs', 'ys', 'ys', 'yS', 'yss' },
   },
   {
     'numToStr/Comment.nvim',
