@@ -11,7 +11,7 @@
 
 # Terminal (kitty)
 super + Return
-	local index="$((`tmux list-session | wc -l` + 1))" && kitty tmux new -As$index && tmux send-keys -t $index.0 "cat ~/.cache/wal/sequences && source ~/.cache/wal/colors-tty/sh" 
+	local index="$((`tmux list-session | wc -l` + 1))" && kitty tmux new -As$index 
 
 # To add support for TTYs this line can be optionally added.
 source ~/.cache/wal/colors-tty.sh
