@@ -66,5 +66,5 @@ fi
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # bun completions
-[ -s "/home/nasrt/.bun/_bun" ] && source "/home/nasrt/.bun/_bun"
+# [ -s "/home/nasrt/.bun/_bun" ] && source "/home/nasrt/.bun/_bun"
 . "$HOME/.cargo/env"

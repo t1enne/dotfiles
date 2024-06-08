@@ -1,16 +1,18 @@
 source $HOME/.zshenv
-ZSH_THEME="fwalch"
+ZSH_THEME="gozilla"
 
 stty icrnl # fixes Enter appearing as ^M
-zstyle ':omz:update' mode auto      # update automatically without asking
+zstyle ':omz:update' mode reminder # avb: auto, reminder, disabled
+
 
 plugins=(
   git
-  jira
+  # jira
   vi-mode
-  docker
+  # docker
+  zsh-autosuggestions
   # zsh-autocomplete
-  # zsh-autosuggestions
+	zsh-syntax-highlighting
   # web-search
 )
 
@@ -54,10 +56,6 @@ function print_colors() {
       printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"
   done
 }
-function gtar() {
-  # tracks all remotes, including deleted ones
-  for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done
-}
 
 function gtr() {
   gco --track `git branch -r | fzf`
@@ -76,8 +74,9 @@ function monitor() {
   file=${@:1:1}
   cmd=${@:2}
   echo "Files: $file"
-  echo "Cmd: $cmd"
-  while inotifywait -e close_write $file; do eval $cmd; done
+  echo "Cmd: '$cmd'"
+	find -type f -name "$file" | entr eval $cmd
+  # while inotifywait -e close_write $file; do eval $cmd; done
 }
 
 function f() {
@@ -88,7 +87,7 @@ function f() {
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # bun completions
-[ -s "/home/nasmx/.bun/_bun" ] && source "/home/nasmx/.bun/_bun"
+# [ -s "/home/nasmx/.bun/_bun" ] && source "/home/nasmx/.bun/_bun"
 
 # opam configuration
-[[ ! -r /home/nasmx/.opam/opam-init/init.zsh ]] || source /home/nasmx/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+# [[ ! -r /home/nasmx/.opam/opam-init/init.zsh ]] || source /home/nasmx/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
