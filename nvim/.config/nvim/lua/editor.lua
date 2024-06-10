@@ -50,6 +50,7 @@ return {
     lazy = false,
     config = function()
       vim.cmd 'colorscheme tender'
+      vim.cmd 'hi Normal guibg=none ctermbg=none'
     end,
   },
   {
