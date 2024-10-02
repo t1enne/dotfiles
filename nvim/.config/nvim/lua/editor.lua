@@ -45,13 +45,8 @@ return {
   { 'jaawerth/fennel.vim', ft = { 'fennel' } },
   { 'Olical/conjure', ft = { 'rkt', 'racket' } },
   { 'echasnovski/mini.surround', events = { 'VeryLazy' }, opts = { n_lines = 10, search_method = 'cover_or_next' } },
-  {
-    'jacoborus/tender.vim',
-    lazy = false,
-    config = function()
-      vim.cmd 'colorscheme tender'
-    end,
-  },
+  { 'aliqyan-21/darkvoid.nvim', lazy = false, transparent = true, glow = true },
+  -- { 'jacoborus/tender.vim', lazy = false },
   {
     'numToStr/Comment.nvim',
     keys = {
@@ -109,7 +104,7 @@ return {
     cmd = 'F',
     init = function()
       vim.cmd [[
-    let g:fff#split = "20new"
+				let g:fff#split = "20new"
     ]]
     end,
   },
