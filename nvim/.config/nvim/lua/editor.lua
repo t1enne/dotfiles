@@ -39,6 +39,9 @@ vim.cmd [[
 	set noswapfile
 	set nowrap
 	iab lmd <C-v>u03bb
+
+	" colorscheme retrobox
+	" hi Normal guibg=none ctermbg=none
 ]]
 
 return {
@@ -46,11 +49,9 @@ return {
   { 'Olical/conjure', ft = { 'rkt', 'racket' } },
   { 'echasnovski/mini.surround', events = { 'VeryLazy' }, opts = { n_lines = 10, search_method = 'cover_or_next' } },
   {
-    'jacoborus/tender.vim',
-    lazy = false,
+    'bettervim/yugen.nvim',
     config = function()
-      vim.cmd 'colorscheme tender'
-      vim.cmd 'hi Normal guibg=none ctermbg=none'
+      vim.cmd.colorscheme 'yugen'
     end,
   },
   {
@@ -139,6 +140,10 @@ return {
           python = { 'black' },
           rust = { 'rustfmt' },
         },
+        -- formatters = { deno_fmt_custom = {
+        --   command = 'deno',
+        --   args = { 'fmt', '--single-quote',  },
+        -- } },
         format_on_save = {
           timeout_ms = 500,
           lsp_fallback = true,
