@@ -111,7 +111,7 @@ return {
     cmd = 'F',
     init = function()
       vim.cmd [[
-    let g:fff#split = "20new"
+				let g:fff#split = "20new"
     ]]
     end,
   },

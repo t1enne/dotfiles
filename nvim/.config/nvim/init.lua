@@ -147,6 +147,8 @@ require('lazy').setup({
   },
 })
 
+vim.cmd 'colorscheme darkvoid'
+
 -- [[ Basic Keymaps ]]
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
