@@ -52,6 +52,11 @@ return {
     'bettervim/yugen.nvim',
     config = function()
       vim.cmd.colorscheme 'yugen'
+      vim.cmd [[
+				hi TabLine guibg=#00000 guifg=#505050
+				hi TabLineSel guibg=#00000 guifg=#d4d4d4
+				hi link MiniStatuslineModeNormal DiffAdd
+			]]
     end,
   },
   {
