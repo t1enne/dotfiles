@@ -140,10 +140,6 @@ return {
           python = { 'black' },
           rust = { 'rustfmt' },
         },
-        -- formatters = { deno_fmt_custom = {
-        --   command = 'deno',
-        --   args = { 'fmt', '--single-quote',  },
-        -- } },
         format_on_save = {
           timeout_ms = 500,
           lsp_fallback = true,
