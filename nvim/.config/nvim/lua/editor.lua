@@ -48,7 +48,7 @@ return {
     ft = { 'rkt', 'racket' },
     events = { 'BufEnter' },
     config = function()
-      vim.cmd [[ 
+      vim.cmd [[
 				iabbr lmd <C-v>u03bb
 				iabbr lmd~> <C-v>u03bb~>
 			]]

@@ -11,7 +11,7 @@ export JIRA_DEFAULT_ACTION="dashboard"
 
 export NNN_PLUG='p:preview-tui;f:finder;v:imgview'
 export NNN_FCOLORS=''
-export NNN_FIFO='tmp/nnn.fifo'
+export NNN_FIFO='/tmp/nnn.fifo'
 
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -36,13 +36,9 @@ export JENKINS_PASSWORD="rt"
 export JENKINS_INSECURE="true"
 
 # FFF
-export FFF_HIDDEN=1
-export FFF_OPENER="xdg-open"
+# export FFF_HIDDEN=1
 
-# JAVA
-M2_HOME="$HOME/.maven/apache-maven-3.9.9"
-
-eval "$(luarocks path)" # eval needed for lua 
+# eval "$(luarocks path)" # eval needed for lua 
 
 path+=("$HOME/.local/bin")
 path+=("$HOME/.npm-packages/bin")
@@ -59,11 +55,15 @@ path+=("$M2_HOME/bin")
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
+
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='nvim'
 else
   export EDITOR='nvim'
+fi
+if snap list | grep -q "nvim"; then
+	export EDITOR="snap run nvim"
 fi
 
 # source <(ng completion script)
@@ -73,4 +73,4 @@ fi
 
 # bun completions
 # [ -s "/home/nasrt/.bun/_bun" ] && source "/home/nasrt/.bun/_bun"
-. "$HOME/.cargo/env"
+# . "$HOME/.cargo/env"

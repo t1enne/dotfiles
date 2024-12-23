@@ -1,4 +1,6 @@
 source $HOME/.zshenv
+source $HOME/.config/nnn/quitoncd.sh
+
 ZSH_THEME="gozilla"
 
 # for `echo 'Dont''t'`
@@ -13,7 +15,7 @@ plugins=(
   # jira
   vi-mode
   # docker
-  zsh-autosuggestions
+  # zsh-autosuggestions
   # zsh-autocomplete
 	zsh-syntax-highlighting
   # web-search
@@ -59,9 +61,9 @@ function print_colors() {
   done
 }
 
-function gtr() {
-  gco --track `git branch -r | fzf`
-}
+# function gtr() {
+#   gco --track `git branch -r | fzf`
+# }
 
 # ccode rust | deno | node etc.
 function ccode() {
@@ -81,10 +83,10 @@ function monitor() {
   # while inotifywait -e close_write $file; do eval $cmd; done
 }
 
-function f() {
-    fff "$@"
-    cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
-}
+# function f() {
+#     fff "$@"
+#     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
+# }
 
 function sql() {
 	qr=`psql "$PG_C" --csv -c $1`
@@ -102,6 +104,3 @@ function sql() {
 # opam configuration
 # [[ ! -r /home/nasmx/.opam/opam-init/init.zsh ]] || source /home/nasmx/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
