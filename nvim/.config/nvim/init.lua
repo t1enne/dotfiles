@@ -249,6 +249,7 @@ vim.keymap.set('n', '<leader>fW', ':LiveGrepGitRoot<cr>', { desc = '[F]ind by [G
 vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
 vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = '[F]ind [R]esume' })
 vim.keymap.set('n', '<leader>fc', require('telescope.builtin').colorscheme, { desc = '[F]ind [C]olorscheme' })
+vim.keymap.set('n', '<leader>fl', ':lua require("telescope.builtin").find_files { cwd = vim.fn.expand("%:p:h") } <cr>', { desc = '[F]ind [L]ocally' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
