@@ -65,7 +65,7 @@ super + {_,shift + }c
 	bspc node -{c,k}
 
 # Reload Keybindings
-super + escape
+super + Escape
 	pkill -x sxhkd; sxhkd &
 
 # kill window
@@ -129,5 +129,9 @@ super + alt + {l,h,j,k}
 ## Move floating windows
 alt + shift + {Left,Down,Up,Right}
 	bspc node -v {-50 0,0 50,0 -50,50 0}	
+
+super + shift + s 
+	scrot -z -s '/tmp/%d%b-%H%M.png' -e 'xclip -selection clipboard -t image/png $f'
+	
 
 ##---------- EOF ----------##

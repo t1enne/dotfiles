@@ -319,13 +319,19 @@ vim.defer_fn(function()
 end, 0)
 
 -- document existing key chains
-require('which-key').register {
-  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'More git', _ = 'which_key_ignore' },
-  ['<leader>l'] = { name = '[L]sp', _ = 'which_key_ignore' },
-  ['<leader>f'] = { name = '[F]ind', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+require('which-key').setup {
+  {'<leader>d', name = '[D]ocument'},
+  {'<leader>d_', hidden = true },
+  {'<leader>g', name = '[G]it'},
+  {'<leader>g_',  hidden = true },
+  {'<leader>h', name = 'More git'},
+  { '<leader>h', hidden = true },
+  {'<leader>l', name = '[L]sp'},
+  { '<leader>l', hidden = true },
+  {'<leader>f', name = '[F]ind'},
+  { '<leader>f', hidden = true },
+  {'<leader>w', name = '[W]orkspace'},
+  { '<leader>w', hidden = true },
 }
 
 -- [[ Configure LSP ]]
@@ -373,15 +379,6 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
--- document existing key chains
-require('which-key').register {
-  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'More git', _ = 'which_key_ignore' },
-  ['<leader>l'] = { name = '[L]sp', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-}
-
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
 require('mason').setup()
@@ -396,10 +393,10 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  gopls = {},
-  tsserver = {},
-  denols = {},
-  astro = { enabled = true },
+  -- gopls = {},
+  -- tsserver = {},
+  -- denols = {},
+  -- astro = { enabled = true },
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   lua_ls = {
     Lua = {
