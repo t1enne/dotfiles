@@ -38,25 +38,28 @@ vim.opt.splitright = true
 vim.cmd [[
 	set noswapfile
 	set nowrap
-	iab lmd <C-v>u03bb
-
-	" colorscheme retrobox
 	" hi Normal guibg=none ctermbg=none
 ]]
 
 return {
   { 'jaawerth/fennel.vim', ft = { 'fennel' } },
-  { 'Olical/conjure', ft = { 'rkt', 'racket' } },
+  {
+    'Olical/conjure',
+    ft = { 'rkt', 'racket' },
+    events = { 'BufEnter' },
+    config = function()
+      vim.cmd [[ 
+				iabbr lmd <C-v>u03bb
+				iabbr lmd~> <C-v>u03bb~>
+			]]
+    end,
+    dependencies = { 'gpanders/nvim-parinfer' },
+  },
   { 'echasnovski/mini.surround', events = { 'VeryLazy' }, opts = { n_lines = 10, search_method = 'cover_or_next' } },
   {
-    'bettervim/yugen.nvim',
+    'slugbyte/lackluster.nvim',
     config = function()
-      vim.cmd.colorscheme 'yugen'
-      vim.cmd [[
-				hi TabLine guibg=#00000 guifg=#505050
-				hi TabLineSel guibg=#00000 guifg=#d4d4d4
-				hi link MiniStatuslineModeNormal DiffAdd
-			]]
+      vim.cmd.colorscheme 'lackluster'
     end,
   },
   {
@@ -149,6 +152,10 @@ return {
 
       conform.setup {
         formatters_by_ft = formatters_by_ft,
+        format_on_save = {
+          lsp_fallback = true,
+          timeout_ms = 500,
+        },
       }
 
       -- Function to find the first config file by walking up the directory tree
