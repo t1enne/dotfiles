@@ -320,18 +320,18 @@ end, 0)
 
 -- document existing key chains
 require('which-key').setup {
-  {'<leader>d', name = '[D]ocument'},
-  {'<leader>d_', hidden = true },
-  {'<leader>g', name = '[G]it'},
-  {'<leader>g_',  hidden = true },
-  {'<leader>h', name = 'More git'},
-  { '<leader>h', hidden = true },
-  {'<leader>l', name = '[L]sp'},
-  { '<leader>l', hidden = true },
-  {'<leader>f', name = '[F]ind'},
-  { '<leader>f', hidden = true },
-  {'<leader>w', name = '[W]orkspace'},
-  { '<leader>w', hidden = true },
+  { '<leader>d', name = '[D]ocument' },
+  { '<leader>d_', hidden = true },
+  { '<leader>g', name = '[G]it' },
+  { '<leader>g_', hidden = true },
+  { '<leader>h', name = 'More git' },
+  { '<leader>h_', hidden = true },
+  { '<leader>l', name = '[L]sp' },
+  { '<leader>l_', hidden = true },
+  { '<leader>f', name = '[F]ind' },
+  { '<leader>f_', hidden = true },
+  { '<leader>w', name = '[W]orkspace' },
+  { '<leader>w_', hidden = true },
 }
 
 -- [[ Configure LSP ]]
