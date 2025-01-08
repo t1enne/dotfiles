@@ -86,6 +86,14 @@ function f() {
     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
 }
 
+function sql() {
+	qr=`psql "$PG_C" --csv -c $1`
+	exec 3>$2
+	exec 2>/dev/null
+ 	echo $qr | sq '.data' -j "$@" 2>/dev/null || echo $qr
+	exec 2>$3
+}
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # bun completions
