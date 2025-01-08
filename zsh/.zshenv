@@ -36,6 +36,10 @@ export JENKINS_INSECURE="true"
 
 # FFF
 export FFF_HIDDEN=1
+export FFF_OPENER="xdg-open"
+
+# JAVA
+M2_HOME="$HOME/.maven/apache-maven-3.9.9"
 
 eval "$(luarocks path)" # eval needed for lua 
 
@@ -49,6 +53,7 @@ path+=("$HOME/.node/bin")
 path+=("$HOME/.config/yarn/global/node_modules/.bin")
 path+=("$PNPM_HOME:$PATH")
 path+=("$HOME/.nimble/bin")
+path+=("$M2_HOME/bin")
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8

@@ -1,6 +1,9 @@
 source $HOME/.zshenv
 ZSH_THEME="gozilla"
 
+# for `echo 'Dont''t'`
+set rcquotes
+
 stty icrnl # fixes Enter appearing as ^M
 zstyle ':omz:update' mode reminder # avb: auto, reminder, disabled
 
@@ -29,8 +32,7 @@ alias add="sudo apt install"
 alias remove="sudo apt remove"
 alias update="sudo apt update"
 alias lg="lazygit"
-# alias 3n="nnn -aeA"
-alias python="python3"
+alias 3n="nnn -aeA"
 alias findf="find . -type f -name "
 
 # Jira
@@ -91,3 +93,7 @@ function f() {
 
 # opam configuration
 # [[ ! -r /home/nasmx/.opam/opam-init/init.zsh ]] || source /home/nasmx/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
