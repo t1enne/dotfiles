@@ -1,4 +1,5 @@
 # Path to your oh-my-zsh installation.
+source $HOME/.zshscrt
 export ZSH="$HOME/.oh-my-zsh"
 
 # JIRA ENV
