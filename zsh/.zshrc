@@ -89,11 +89,12 @@ function monitor() {
 # }
 
 function sql() {
-	qr=`psql "$PG_C" --csv -c $1`
-	exec 3>$2
-	exec 2>/dev/null
- 	echo $qr | sq '.data' -j "$@" 2>/dev/null || echo $qr
-	exec 2>$3
+		sq sql $@ --json
+# 	# qr=`psql "$PG_C" --csv -c $1`
+# 	# exec 3>$2
+# 	# exec 2>/dev/null
+#  # 	echo $qr | sq '.data' -j "$@" 2>/dev/null || echo $qr
+# 	# exec 2>$3
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
