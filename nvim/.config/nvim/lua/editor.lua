@@ -134,18 +134,18 @@ return {
       vim.g.current_formatter = 'None'
 
       local formatters_by_ft = {
-        javascript = { 'prettier', 'biome', 'deno_fmt' },
-        typescript = { 'prettier', 'biome', 'deno_fmt' },
-        javascriptreact = { 'prettier', 'biome', 'deno_fmt' },
-        typescriptreact = { 'prettier', 'biome', 'deno_fmt' },
+        javascript = { 'prettierd', 'biome', 'deno_fmt' },
+        typescript = { 'prettierd', 'biome', 'deno_fmt' },
+        javascriptreact = { 'prettierd', 'biome', 'deno_fmt' },
+        typescriptreact = { 'prettierd', 'biome', 'deno_fmt' },
         -- For other file types, keep using Prettier as before
-        css = { 'prettier' },
-        html = { 'prettier' },
-        json = { 'prettier', 'deno_fmt', 'biome' },
-        yaml = { 'prettier' },
-        markdown = { 'prettier' },
-        graphql = { 'prettier' },
-        liquid = { 'prettier' },
+        css = { 'prettierd' },
+        html = { 'prettierd' },
+        json = { 'prettierd', 'deno_fmt', 'biome' },
+        yaml = { 'prettierd' },
+        markdown = { 'prettierd' },
+        graphql = { 'prettierd' },
+        liquid = { 'prettierd' },
         lua = { 'stylua' },
         python = { 'isort', 'black' },
       }

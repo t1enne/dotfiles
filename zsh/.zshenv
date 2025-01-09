@@ -51,6 +51,7 @@ path+=("$HOME/.config/yarn/global/node_modules/.bin")
 path+=("$PNPM_HOME:$PATH")
 path+=("$HOME/.nimble/bin")
 path+=("$M2_HOME/bin")
+path+=("/opt/bin")
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -61,9 +62,6 @@ if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='nvim'
 else
   export EDITOR='nvim'
-fi
-if snap list | grep -q "nvim"; then
-	export EDITOR="snap run nvim"
 fi
 
 # source <(ng completion script)
