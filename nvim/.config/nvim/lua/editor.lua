@@ -42,6 +42,14 @@ vim.cmd [[
 ]]
 
 return {
+  {
+    'luukvbaal/nnn.nvim',
+    cmd = { 'NnnExplorer', 'NnnPicker' },
+    keys = {
+      { '<leader>fe', ':NnnPicker<CR>', mode = { 'n' }, desc = 'Comment toggle linewise' },
+    },
+    opts = { cmd = { picker = 'nnn -oAe' } },
+  },
   { 'jaawerth/fennel.vim', ft = { 'fennel' } },
   {
     'Olical/conjure',
@@ -113,16 +121,16 @@ return {
       }
     end,
   },
-  {
-    'dylanaraps/fff.vim',
-    lazy = true,
-    cmd = 'F',
-    init = function()
-      vim.cmd [[
-				let g:fff#split = "20new"
-    ]]
-    end,
-  },
+  -- {
+  --   'dylanaraps/fff.vim',
+  --   lazy = true,
+  --   cmd = 'F',
+  --   init = function()
+  --     vim.cmd [[
+  -- 		let g:fff#split = "20new"
+  --   ]]
+  --   end,
+  -- },
   {
     'stevearc/conform.nvim',
     dependencies = { 'mason.nvim', 'williamboman/mason-lspconfig.nvim' },
