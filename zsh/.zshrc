@@ -97,6 +97,10 @@ function sql() {
 # 	# exec 2>$3
 }
 
+function timestamp() {
+	date +"%Y%m%d%H%M"
+}
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # bun completions

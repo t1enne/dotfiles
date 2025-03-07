@@ -13,7 +13,6 @@ map('n', '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save file' })
 map('n', '<leader>qq', '<cmd>qa!<cr>', { desc = 'Save file' })
 -- file explorer
 map('n', '<leader>e', ':lua require("telescope.builtin").find_files { cwd = vim.fn.expand("%:p:h") } <cr>', { desc = 'Open FFF in here' })
-map('n', '<leader>E', ':F %:p:h<cr>', { desc = 'Open FFF in here' })
 
 map('n', '<leader>c', ':bd<CR>', { desc = 'Close buffer' })
 

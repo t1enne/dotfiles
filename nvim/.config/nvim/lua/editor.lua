@@ -38,15 +38,32 @@ vim.opt.splitright = true
 vim.cmd [[
 	set noswapfile
 	set nowrap
-	" hi Normal guibg=none ctermbg=none
+	colorscheme habamax
+	hi Normal guibg=none ctermbg=none
 ]]
 
 return {
   {
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    ---@type Flash.Config
+    opts = {},
+  -- stylua: ignore
+  keys = {
+    { "S", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+    { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+    { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+    -- { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+  },
+  },
+  { 'folke/twilight.nvim', opts = {}, keys = {
+    { '<leader>tt', ':Twilight<CR>', mode = { 'n' }, desc = 'Toggle twilight' },
+  } },
+  {
     'luukvbaal/nnn.nvim',
     cmd = { 'NnnExplorer', 'NnnPicker' },
     keys = {
-      { '<leader>fe', ':NnnPicker<CR>', mode = { 'n' }, desc = 'Comment toggle linewise' },
+      { '<leader>fe', ':NnnPicker %:p:h<CR>', mode = { 'n' }, desc = 'Comment toggle linewise' },
     },
     opts = { cmd = { picker = 'nnn -oAe' } },
   },
@@ -64,12 +81,6 @@ return {
     dependencies = { 'gpanders/nvim-parinfer' },
   },
   { 'echasnovski/mini.surround', events = { 'VeryLazy' }, opts = { n_lines = 10, search_method = 'cover_or_next' } },
-  {
-    'slugbyte/lackluster.nvim',
-    config = function()
-      vim.cmd.colorscheme 'lackluster'
-    end,
-  },
   {
     'numToStr/Comment.nvim',
     keys = {
