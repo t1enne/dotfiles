@@ -4,7 +4,7 @@ source $HOME/.config/nnn/quitoncd.sh
 ZSH_THEME="gozilla"
 
 # for `echo 'Dont''t'`
-set rcquotes
+setopt rcquotes
 
 stty icrnl # fixes Enter appearing as ^M
 zstyle ':omz:update' mode reminder # avb: auto, reminder, disabled
@@ -27,6 +27,8 @@ VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 VI_MODE_SET_CURSOR=true
 
 source $ZSH/oh-my-zsh.sh
+
+nvm use 22
 
 # Shortcuts
 alias e="$EDITOR"

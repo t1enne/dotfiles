@@ -113,7 +113,19 @@ return {
     },
     opts = {},
   },
-  { 'max397574/better-escape.nvim', opts = {} },
+  {
+    'max397574/better-escape.nvim',
+    opts = {
+      default_mappings = false,
+      mappings = {
+        i = {
+          j = {
+            k = '<Esc>',
+          },
+        },
+      },
+    },
+  },
   {
     'echasnovski/mini.pairs',
     event = 'InsertEnter',
@@ -153,14 +165,14 @@ return {
       vim.g.current_formatter = 'None'
 
       local formatters_by_ft = {
-        javascript = { 'prettierd', 'biome', 'deno_fmt' },
-        typescript = { 'prettierd', 'biome', 'deno_fmt' },
-        javascriptreact = { 'prettierd', 'biome', 'deno_fmt' },
-        typescriptreact = { 'prettierd', 'biome', 'deno_fmt' },
+        javascript = { 'prettierd', 'biome' },
+        typescript = { 'prettierd', 'biome' },
+        javascriptreact = { 'prettierd', 'biome' },
+        typescriptreact = { 'prettierd', 'biome' },
         -- For other file types, keep using Prettier as before
         css = { 'prettierd' },
         html = { 'prettierd' },
-        json = { 'prettierd', 'deno_fmt', 'biome' },
+        json = { 'prettierd', 'biome' },
         yaml = { 'prettierd' },
         markdown = { 'prettierd' },
         graphql = { 'prettierd' },
