@@ -1,5 +1,37 @@
 return {
   {
+    'olimorris/codecompanion.nvim',
+    config = true,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    opts = {
+      adapters = {
+        deepseek = function()
+          return require('codecompanion.adapters').extend('deepseek', {
+            schema = {
+              model = {
+                default = 'deepseek-chat',
+              },
+            },
+          })
+        end,
+      },
+      strategies = {
+        cmd = {
+          adapter = 'deepseek',
+        },
+        chat = {
+          adapter = 'deepseek',
+        },
+        inline = {
+          adapter = 'deepseek',
+        },
+      },
+    },
+  },
+  {
     'saghen/blink.cmp',
     dependencies = 'rafamadriz/friendly-snippets',
     version = '*',
@@ -51,9 +83,8 @@ return {
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
-        -- per_filetype = { codecompanion = { 'codecompanion' } },
+        per_filetype = { codecompanion = { 'codecompanion' } },
       },
-
       fuzzy = { implementation = 'prefer_rust_with_warning' },
     },
     opts_extend = { 'sources.default' },
@@ -108,13 +139,6 @@ return {
           --     single_file_support = true,
           --   },
           -- },
-        },
-        setup = {
-          rust_analyzer = {
-            diagnostics = {
-              enable = true,
-            },
-          },
         },
       }
     end,
