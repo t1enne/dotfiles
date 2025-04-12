@@ -52,6 +52,7 @@ path+=("$PNPM_HOME:$PATH")
 path+=("$HOME/.nimble/bin")
 path+=("$M2_HOME/bin")
 path+=("/opt/bin")
+path+=("$HOME/.fly/bin")
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
