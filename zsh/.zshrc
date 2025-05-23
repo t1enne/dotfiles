@@ -14,7 +14,8 @@ plugins=(
   git
   # jira
   vi-mode
-  # docker
+  docker
+  docker-compose
   # zsh-autosuggestions
   # zsh-autocomplete
 	zsh-syntax-highlighting
@@ -28,7 +29,7 @@ VI_MODE_SET_CURSOR=true
 
 source $ZSH/oh-my-zsh.sh
 
-nvm use 22
+nvm use 22 >/dev/null
 
 # Shortcuts
 alias e="$EDITOR"
@@ -111,3 +112,7 @@ function timestamp() {
 # opam configuration
 # [[ ! -r /home/nasmx/.opam/opam-init/init.zsh ]] || source /home/nasmx/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
 
+
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
