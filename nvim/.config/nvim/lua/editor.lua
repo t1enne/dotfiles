@@ -42,6 +42,11 @@ vim.cmd [[
 	hi Normal guibg=none ctermbg=none
 ]]
 
+vim.diagnostic.config {
+  virtual_text = { current_line = true },
+  -- virtual_lines = true,
+}
+
 return {
   {
     'folke/flash.nvim',
@@ -63,9 +68,9 @@ return {
     'luukvbaal/nnn.nvim',
     cmd = { 'NnnExplorer', 'NnnPicker' },
     keys = {
-      { '<leader>fe', ':NnnPicker %:p:h<CR>', mode = { 'n' }, desc = 'Comment toggle linewise' },
+      { '<leader>fe', ':NnnPicker %:p:h<CR>', mode = { 'n' }, desc = 'Open file picker' },
     },
-    opts = { cmd = { picker = 'nnn -oAe' } },
+    opts = { picker = { cmd = 'nnn -oAe' } },
   },
   { 'jaawerth/fennel.vim', ft = { 'fennel' } },
   {

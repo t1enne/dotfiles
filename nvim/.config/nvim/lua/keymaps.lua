@@ -33,3 +33,7 @@ map('n', '<leader>xq', '<cmd>copen<cr>', { desc = 'Quickfix List' })
 -- nav buffers
 map('n', 'H', '<cmd>bprevious<cr>', { desc = 'Prev buffer' })
 map('n', 'L', '<cmd>bnext<cr>', { desc = 'Next buffer' })
+
+-- file manipulation
+map('n', '<leader>nf', ':e %:h/', { desc = 'Edit file relative to path' })
+map('n', '<leader>nd', ':!mkdir -p %:h/', { desc = 'Create dir' })
