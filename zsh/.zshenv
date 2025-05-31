@@ -35,6 +35,8 @@ export JENKINS_URL="http://srv.raintonic.com:8080"
 export JENKINS_PASSWORD="rt"
 export JENKINS_INSECURE="true"
 
+export WABT_PATH="$HOME/Downloads/Apps/wabt-1.0.37"
+
 # FFF
 # export FFF_HIDDEN=1
 

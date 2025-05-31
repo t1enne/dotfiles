@@ -116,3 +116,5 @@ function timestamp() {
 
 # Load Angular CLI autocompletion.
 source <(ng completion script)
+# opencode
+export PATH=/home/nasmx/.opencode/bin:$PATH

@@ -1,3 +1,4 @@
 *state.yml
 .zshscrt
 scripts/.local/bin/nvim
+nnn/.config/.lastd
