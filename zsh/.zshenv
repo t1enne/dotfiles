@@ -74,4 +74,4 @@ fi
 
 # bun completions
 # [ -s "/home/nasrt/.bun/_bun" ] && source "/home/nasrt/.bun/_bun"
-# . "$HOME/.cargo/env"
+. "$HOME/.cargo/env"
