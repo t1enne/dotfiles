@@ -19,7 +19,7 @@ plugins=(
   # zsh-autosuggestions
   # zsh-autocomplete
 	zsh-syntax-highlighting
-  # web-search
+  web-search
 )
 
 # Uncomment the following line to enable command auto-correction.
@@ -115,6 +115,6 @@ function timestamp() {
 
 
 # Load Angular CLI autocompletion.
-source <(ng completion script)
+# source <(ng completion script)
 # opencode
 export PATH=/home/nasmx/.opencode/bin:$PATH
