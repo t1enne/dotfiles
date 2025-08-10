@@ -2,3 +2,4 @@
 .zshscrt
 scripts/.local/bin/nvim
 nnn/.config/.lastd
+.opencode
