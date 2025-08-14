@@ -132,18 +132,35 @@ return {
         autoformat = true,
         format = { formatting_options = nil, timeout_ms = nil },
         servers = {
-          -- racket = {
-          --   default_config = {
-          --     cmd = { 'racket', '--lib', 'racket-langserver' },
-          --     filetypes = { 'racket', 'scheme' },
-          --     single_file_support = true,
-          --   },
-          -- },
+          -- denols and ts_ls are configured directly in config function
         },
       }
     end,
     config = function(_, opts)
       local lspconfig = require 'lspconfig'
+      local util = require 'lspconfig.util'
+
+      -- Setup denols
+      lspconfig.denols.setup {
+        root_dir = function(fname)
+          return util.root_pattern('deno.json', 'deno.jsonc')(fname)
+        end,
+        capabilities = require('blink.cmp').get_lsp_capabilities(),
+      }
+
+      -- Setup ts_ls
+      lspconfig.ts_ls.setup {
+        root_dir = function(fname)
+          -- Don't start ts_ls if we're in a deno project
+          if util.root_pattern('deno.json', 'deno.jsonc')(fname) then
+            return nil
+          end
+          return util.root_pattern('package.json', 'tsconfig.json')(fname)
+        end,
+        single_file_support = false,
+        capabilities = require('blink.cmp').get_lsp_capabilities(),
+      }
+
       lspconfig.racket_langserver.setup {
         default_config = {
           cmd = { 'racket', '--lib', 'racket-langserver' },
@@ -151,9 +168,12 @@ return {
           single_file_support = true,
         },
       }
+
       for server, config in pairs(opts.servers) do
-        config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-        lspconfig[server].setup(config)
+        if server ~= 'denols' and server ~= 'ts_ls' then
+          config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
+          lspconfig[server].setup(config)
+        end
       end
     end,
   },

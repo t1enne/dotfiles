@@ -379,8 +379,7 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- gopls = {},
-  -- tsserver = {},
-  -- denols = {},
+  -- tsserver and denols are configured in lsp.lua
   -- astro = { enabled = true },
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   lua_ls = {
@@ -409,18 +408,14 @@ mason_lspconfig.setup {
 
 mason_lspconfig.setup_handlers {
   function(server_name)
-    require('lspconfig')[server_name].setup {
-      -- capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-    if require('utils').get_config 'denols' and require('utils').get_config 'tsserver' then
-      local is_deno = require('lspconfig.util').root_pattern('deno.json', 'mod.ts')
-      require('utils').disable('tsserver', is_deno)
-      require('utils').disable('denols', function(root_dir)
-        return not is_deno(root_dir)
-      end)
+    -- Skip ts_ls and denols as they're configured in lsp.lua
+    if server_name ~= 'ts_ls' and server_name ~= 'denols' then
+      require('lspconfig')[server_name].setup {
+        -- capabilities = capabilities,
+        on_attach = on_attach,
+        settings = servers[server_name],
+        filetypes = (servers[server_name] or {}).filetypes,
+      }
     end
   end,
 }
