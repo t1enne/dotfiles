@@ -1,35 +1,50 @@
 source $HOME/.zshenv
 source $HOME/.config/nnn/quitoncd.sh
 
-ZSH_THEME="gozilla"
-
-# for `echo 'Dont''t'`
+# Basic options
 setopt rcquotes
+[[ $- == *i* ]] && stty icrnl 2>/dev/null
+zstyle ':omz:update' mode disabled
 
-stty icrnl # fixes Enter appearing as ^M
-zstyle ':omz:update' mode reminder # avb: auto, reminder, disabled
-
-
-plugins=(
-  git
-  # jira
-  vi-mode
-  docker
-  docker-compose
-  # zsh-autosuggestions
-  # zsh-autocomplete
-	zsh-syntax-highlighting
-  web-search
-)
-
-# Uncomment the following line to enable command auto-correction.
+# Theme and oh-my-zsh
+ZSH_THEME="gozilla"
 ENABLE_CORRECTION="false"
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 VI_MODE_SET_CURSOR=true
 
+# Minimal plugins for speed
+plugins=(git vi-mode)
+
 source $ZSH/oh-my-zsh.sh
 
-nvm use 22 >/dev/null
+# Lazy load heavy tools
+function nvm() {
+    unfunction nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+    nvm "$@"
+}
+
+function pyenv() {
+    unfunction pyenv
+    eval "$(command pyenv init -)"
+    pyenv "$@"
+}
+
+# Auto-use node 22 only when needed
+function node() {
+    if ! command -v node &> /dev/null; then
+        nvm use 22 >/dev/null 2>&1
+    fi
+    command node "$@"
+}
+
+function npm() {
+    if ! command -v npm &> /dev/null; then
+        nvm use 22 >/dev/null 2>&1
+    fi
+    command npm "$@"
+}
 
 # Shortcuts
 alias e="$EDITOR"
@@ -39,6 +54,7 @@ alias update="sudo apt update"
 alias lg="lazygit"
 alias 3n="nnn -aeA"
 alias findf="find . -type f -name "
+alias py="python3.8"
 
 # Jira
 alias jirah="cat ~/.oh-my-zsh/plugins/jira/README.md"
@@ -64,10 +80,6 @@ function print_colors() {
   done
 }
 
-# function gtr() {
-#   gco --track `git branch -r | fzf`
-# }
-
 # ccode rust | deno | node etc.
 function ccode() {
   p=$HOME/Documents/code
@@ -86,17 +98,12 @@ function monitor() {
   # while inotifywait -e close_write $file; do eval $cmd; done
 }
 
-# function f() {
-#     fff "$@"
-#     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
-# }
-
 function sql() {
 		sq sql $@ --json
 # 	# qr=`psql "$PG_C" --csv -c $1`
 # 	# exec 3>$2
 # 	# exec 2>/dev/null
-#  # 	echo $qr | sq '.data' -j "$@" 2>/dev/null || echo $qr
+#  	#	echo $qr | sq '.data' -j "$@" 2>/dev/null || echo $qr
 # 	# exec 2>$3
 }
 
@@ -112,9 +119,5 @@ function timestamp() {
 # opam configuration
 # [[ ! -r /home/nasmx/.opam/opam-init/init.zsh ]] || source /home/nasmx/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
 
-
-
 # Load Angular CLI autocompletion.
 # source <(ng completion script)
-# opencode
-export PATH=/home/nasmx/.opencode/bin:$PATH
