@@ -37,3 +37,4 @@ map('n', 'L', '<cmd>bnext<cr>', { desc = 'Next buffer' })
 -- file manipulation
 map('n', '<leader>nf', ':e %:h/', { desc = 'Edit file relative to path' })
 map('n', '<leader>nd', ':!mkdir -p %:h/', { desc = 'Create dir' })
+map('n', 'gdd', ':lua vim.lsp.buf.definition()<cr>', { desc = '[g]o To [d]efinition' })
