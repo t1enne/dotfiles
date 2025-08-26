@@ -13,7 +13,7 @@ VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 VI_MODE_SET_CURSOR=true
 
 # Minimal plugins for speed
-plugins=(git vi-mode)
+plugins=(git vi-mode docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 
