@@ -18,29 +18,30 @@ plugins=(git vi-mode docker-compose)
 source $ZSH/oh-my-zsh.sh
 
 # Lazy load heavy tools
-function nvm() {
-    unfunction nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-    nvm "$@"
-}
-
 function pyenv() {
     unfunction pyenv
     eval "$(command pyenv init -)"
     pyenv "$@"
 }
 
+function nvm() {
+		echo "loading nvm"
+		unset -f nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+    nvm "$@"
+}
+
 # Auto-use node 22 only when needed
 function node() {
-    if ! command -v node &> /dev/null; then
+    if ! type -p node &> /dev/null; then
         nvm use 22 >/dev/null 2>&1
     fi
     command node "$@"
 }
 
 function npm() {
-    if ! command -v npm &> /dev/null; then
+    if ! type -p npm &> /dev/null; then
         nvm use 22 >/dev/null 2>&1
     fi
     command npm "$@"
