@@ -35,14 +35,14 @@ function nvm() {
 # Auto-use node 22 only when needed
 function node() {
     if ! type -p node &> /dev/null; then
-        nvm use 22 >/dev/null 2>&1
+        nvm use 24 >/dev/null 2>&1
     fi
     command node "$@"
 }
 
 function npm() {
     if ! type -p npm &> /dev/null; then
-        nvm use 22 >/dev/null 2>&1
+        nvm use 24 >/dev/null 2>&1
     fi
     command npm "$@"
 }
@@ -113,6 +113,8 @@ function timestamp() {
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+nvm use 24 &> /dev/null
 
 # bun completions
 # [ -s "/home/nasmx/.bun/_bun" ] && source "/home/nasmx/.bun/_bun"
