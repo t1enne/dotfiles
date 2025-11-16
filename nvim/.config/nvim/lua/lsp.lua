@@ -1,37 +1,5 @@
 return {
   {
-    'olimorris/codecompanion.nvim',
-    config = true,
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-treesitter/nvim-treesitter',
-    },
-    opts = {
-      adapters = {
-        deepseek = function()
-          return require('codecompanion.adapters').extend('deepseek', {
-            schema = {
-              model = {
-                default = 'deepseek-chat',
-              },
-            },
-          })
-        end,
-      },
-      strategies = {
-        cmd = {
-          adapter = 'deepseek',
-        },
-        chat = {
-          adapter = 'deepseek',
-        },
-        inline = {
-          adapter = 'deepseek',
-        },
-      },
-    },
-  },
-  {
     'saghen/blink.cmp',
     dependencies = 'rafamadriz/friendly-snippets',
     version = '*',
@@ -83,7 +51,6 @@ return {
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
-        per_filetype = { codecompanion = { 'codecompanion' } },
       },
       -- fuzzy = { implementation = 'prefer_rust_with_warning' },
     },
@@ -113,7 +80,6 @@ return {
         },
       },
       { 'williamboman/mason-lspconfig.nvim' },
-      { 'hrsh7th/cmp-nvim-lsp' },
       { 'j-hui/fidget.nvim' },
     },
     opts = function()
@@ -132,48 +98,44 @@ return {
         autoformat = true,
         format = { formatting_options = nil, timeout_ms = nil },
         servers = {
-          -- denols and ts_ls are configured directly in config function
+          denols = {
+            root_markers = { 'deno.json', 'deno.jsonc' },
+          },
+          angularls = {
+            root_dir = function(fname)
+              -- Don't start ts_ls if we're in a deno project
+              if require('lspconfig.util').root_pattern 'angular.json'(fname) then
+                require('lspconfig.util').root_pattern 'angular.json'(fname)
+              end
+              return nil
+            end,
+          },
+          ts_ls = {
+            single_file_support = false,
+            root_dir = function(fname)
+              -- Don't start ts_ls if we're in a deno project
+              if require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc')(fname) then
+                return nil
+              end
+              return require('lspconfig.util').root_pattern('package.json', 'tsconfig.json')(fname)
+            end,
+          },
+          racket_langserver = {
+            default_config = {
+              cmd = { 'racket', '--lib', 'racket-langserver' },
+              filetypes = { 'racket', 'scheme' },
+              single_file_support = true,
+            },
+          },
         },
       }
     end,
     config = function(_, opts)
-      local lspconfig = require 'lspconfig'
-      local util = require 'lspconfig.util'
-
-      -- Setup denols
-      lspconfig.denols.setup {
-        root_dir = function(fname)
-          return util.root_pattern('deno.json', 'deno.jsonc')(fname)
-        end,
-        capabilities = require('blink.cmp').get_lsp_capabilities(),
-      }
-
-      -- Setup ts_ls
-      lspconfig.ts_ls.setup {
-        root_dir = function(fname)
-          -- Don't start ts_ls if we're in a deno project
-          if util.root_pattern('deno.json', 'deno.jsonc')(fname) then
-            return nil
-          end
-          return util.root_pattern('package.json', 'tsconfig.json')(fname)
-        end,
-        single_file_support = false,
-        capabilities = require('blink.cmp').get_lsp_capabilities(),
-      }
-
-      lspconfig.racket_langserver.setup {
-        default_config = {
-          cmd = { 'racket', '--lib', 'racket-langserver' },
-          filetypes = { 'racket', 'scheme' },
-          single_file_support = true,
-        },
-      }
-
       for server, config in pairs(opts.servers) do
-        if server ~= 'denols' and server ~= 'ts_ls' then
-          config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-          lspconfig[server].setup(config)
-        end
+        -- if server ~= 'denols' and server ~= 'ts_ls' and server ~= 'angularls' then
+        -- config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
+        -- vim.lsp.config(server, config)
+        -- end
       end
     end,
   },
