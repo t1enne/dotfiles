@@ -112,6 +112,9 @@ function timestamp() {
 	date +"%Y%m%d%H%M"
 }
 
+alias uuid="cat /proc/sys/kernel/random/uuid"
+
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 nvm use 24 &> /dev/null

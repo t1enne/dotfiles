@@ -1,4 +1,3 @@
-# Path to your oh-my-zsh installation.
 source "$HOME/.zshscrt"
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -27,6 +26,13 @@ export JENKINS_URL="http://srv.raintonic.com:8080"
 export JENKINS_PASSWORD="rt"
 export JENKINS_INSECURE="true"
 
+# Julia 
+export JULIA_NUM_THREADS=4
+
+# OpenHands CLI aliases
+alias openhands="uvx --python 3.12 --from openhands-ai openhands"
+alias oh="uvx --python 3.12 --from openhands-ai openhands"
+
 # Build PATH once without duplicates
 typeset -U path
 path=(
@@ -44,8 +50,9 @@ path=(
     "$HOME/.config/yarn/global/node_modules/.bin"
     "$PNPM_HOME"
     "$HOME/.nimble/bin"
-    "/opt/bin"
     "$HOME/.fly/bin"
+		"$HOME/.juliaup/bin"
+    "/opt/bin"
     $path
 )
 

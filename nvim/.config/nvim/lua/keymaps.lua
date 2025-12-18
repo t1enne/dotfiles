@@ -12,7 +12,7 @@ map('n', '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save file' })
 -- close all
 map('n', '<leader>qq', '<cmd>qa!<cr>', { desc = 'Save file' })
 -- file explorer
-map('n', '<leader>e', ':lua require("telescope.builtin").find_files { cwd = vim.fn.expand("%:p:h") } <cr>', { desc = 'Open FFF in here' })
+map('n', '<leader>eh', ':lua require("telescope.builtin").find_files { cwd = vim.fn.expand("%:p:h") } <cr>', { desc = 'Open FFF in here' })
 
 map('n', '<leader>c', ':bd<CR>', { desc = 'Close buffer' })
 
@@ -38,3 +38,5 @@ map('n', 'L', '<cmd>bnext<cr>', { desc = 'Next buffer' })
 map('n', '<leader>nf', ':e %:h/', { desc = 'Edit file relative to path' })
 map('n', '<leader>nd', ':!mkdir -p %:h/', { desc = 'Create dir' })
 map('n', 'gdd', ':lua vim.lsp.buf.definition()<cr>', { desc = '[g]o To [d]efinition' })
+
+map('n', 'S', '/', { desc = 'Start search' })

@@ -48,19 +48,6 @@ vim.diagnostic.config {
 }
 
 return {
-  {
-    'folke/flash.nvim',
-    event = 'VeryLazy',
-    ---@type Flash.Config
-    opts = {},
-  -- stylua: ignore
-  keys = {
-    { "S", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-    { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-    { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-    -- { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-  },
-  },
   { 'folke/twilight.nvim', opts = {}, keys = {
     { '<leader>tt', ':Twilight<CR>', mode = { 'n' }, desc = 'Toggle twilight' },
   } },
@@ -70,7 +57,11 @@ return {
     keys = {
       { '<leader>fe', ':NnnPicker %:p:h<CR>', mode = { 'n' }, desc = 'Open file picker' },
     },
-    opts = { picker = { cmd = 'nnn -oAe' } },
+    opts = {
+      picker = {
+        cmd = 'nnn -oAe',
+      },
+    },
   },
   { 'jaawerth/fennel.vim', ft = { 'fennel' } },
   {
@@ -110,15 +101,6 @@ return {
     end,
   },
   {
-    'Exafunction/codeium.nvim',
-    event = 'InsertEnter',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'hrsh7th/nvim-cmp',
-    },
-    opts = {},
-  },
-  {
     'max397574/better-escape.nvim',
     opts = {
       default_mappings = false,
@@ -130,11 +112,6 @@ return {
         },
       },
     },
-  },
-  {
-    'echasnovski/mini.pairs',
-    event = 'InsertEnter',
-    opts = {},
   },
   {
     'christoomey/vim-tmux-navigator',
@@ -161,7 +138,7 @@ return {
   -- },
   {
     'stevearc/conform.nvim',
-    dependencies = { 'mason.nvim', 'williamboman/mason-lspconfig.nvim' },
+    dependencies = { 'mason.nvim' },
     event = { 'BufReadPre', 'BufNewFile', 'BufEnter' },
     config = function()
       local conform = require 'conform'
@@ -200,7 +177,7 @@ return {
         local home_dir = vim.fn.expand '$HOME'
 
         local config_files = {
-          prettier = { '.prettierrc', '.prettierrc.json', '.prettierrc.js' },
+          -- prettier = { '.prettierrc', '.prettierrc.json', '.prettierrc.js' },
           biome = { 'biome.json' },
           deno = { 'deno.json', 'deno.jsonc' },
         }
@@ -226,9 +203,9 @@ return {
         local formatter = find_first_config()
 
         if formatter then
-          if formatter == 'prettier' and vim.tbl_contains(available_formatters, 'prettier') then
-            vim.g.current_formatter = 'prettier'
-            return { 'prettier' }
+          if formatter == 'prettierd' and vim.tbl_contains(available_formatters, 'prettierd') then
+            vim.g.current_formatter = 'prettierd'
+            return { 'prettierd' }
           elseif formatter == 'biome' and vim.tbl_contains(available_formatters, 'biome') then
             vim.g.current_formatter = 'biome'
             return { 'biome' }
@@ -239,7 +216,7 @@ return {
         end
 
         -- Default to the first available formatter for the file type, or prettier if none specified
-        vim.g.current_formatter = available_formatters[1] or 'prettier'
+        vim.g.current_formatter = available_formatters[1] or 'prettierd'
         return { vim.g.current_formatter }
       end
 
