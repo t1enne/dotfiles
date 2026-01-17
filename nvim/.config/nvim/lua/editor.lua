@@ -160,7 +160,7 @@ return {
         graphql = { 'prettierd' },
         liquid = { 'prettierd' },
         lua = { 'stylua' },
-        python = { 'isort', 'black' },
+        python = { 'ruff' },
       }
 
       conform.setup {
