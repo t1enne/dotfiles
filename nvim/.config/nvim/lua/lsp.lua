@@ -99,32 +99,48 @@ return {
         format = { formatting_options = nil, timeout_ms = nil },
         servers = {
           denols = {
-            root_markers = { 'deno.json', 'deno.jsonc' },
-          },
-          angularls = {
             root_dir = function(fname)
-              -- Don't start ts_ls if we're in a deno project
-              if require('lspconfig.util').root_pattern 'angular.json'(fname) then
-                require('lspconfig.util').root_pattern 'angular.json'(fname)
+              if require('lspconfig.util').root_pattern 'deno.json'(fname) then
+                return require('lspconfig.util').root_pattern 'deno.json'(fname)
               end
               return nil
             end,
           },
-          ts_ls = {
-            single_file_support = false,
+          angularls = {
             root_dir = function(fname)
-              -- Don't start ts_ls if we're in a deno project
-              if require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc')(fname) then
-                return nil
+              if require('lspconfig.util').root_pattern 'angular.json'(fname) then
+                return require('lspconfig.util').root_pattern 'angular.json'(fname)
               end
-              return require('lspconfig.util').root_pattern('package.json', 'tsconfig.json')(fname)
+              return nil
             end,
           },
-          racket_langserver = {
-            default_config = {
-              cmd = { 'racket', '--lib', 'racket-langserver' },
-              filetypes = { 'racket', 'scheme' },
-              single_file_support = true,
+          astro = {
+            root_marker = { 'astro.config.mjs' },
+          },
+          ts_ls = {
+            single_file_support = false,
+            -- root_dir = function(fname)
+            --   if require('lspconfig.util').root_pattern('package.json', 'tsconfig.json')(fname) then
+            --     return require('lspconfig.util').root_pattern('package.json', 'tsconfig.json')(fname)
+            --   end
+            -- end,
+            root_marker = { 'tsconfig.json' },
+          },
+          -- racket_langserver = {
+          --   default_config = {
+          --     cmd = { 'racket', '--lib', 'racket-langserver' },
+          --     filetypes = { 'racket', 'scheme' },
+          --     single_file_support = true,
+          --   },
+          -- },
+          lua_ls = {
+            root_marker = { '.luarc.json' },
+            settings = {
+              Lua = {
+                diagnostics = {
+                  globals = { 'vim' },
+                },
+              },
             },
           },
         },
@@ -132,10 +148,15 @@ return {
     end,
     config = function(_, opts)
       for server, config in pairs(opts.servers) do
-        -- if server ~= 'denols' and server ~= 'ts_ls' and server ~= 'angularls' then
-        -- config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-        -- vim.lsp.config(server, config)
-        -- end
+        if server ~= 'angularls' then
+          config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
+          vim.lsp.config(server, config)
+          vim.lsp.enable(server)
+        end
+      end
+
+      if require('lspconfig.util').root_pattern 'angular.json'(fname) then
+        vim.lsp.enable 'angularls'
       end
     end,
   },

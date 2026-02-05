@@ -13,6 +13,7 @@ export GO111MODULE=on
 export PNPM_HOME="$HOME/.local/share/pnpm"
 export DOTS="$HOME/.dotfiles"
 export EDITOR='nvim'
+export SUDOEDITOR="vim"
 
 # Tool paths
 export BUN_INSTALL="$HOME/.bun"
