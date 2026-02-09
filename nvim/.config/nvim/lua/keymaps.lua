@@ -40,3 +40,11 @@ map('n', '<leader>nd', ':!mkdir -p %:h/', { desc = 'Create dir' })
 map('n', 'gdd', ':lua vim.lsp.buf.definition()<cr>', { desc = '[g]o To [d]efinition' })
 
 map('n', 'S', '/', { desc = 'Start search' })
+
+-- toggle wrap
+local function toggle_wrap()
+  local wraps = vim.opt.wrap:get()
+  vim.opt.wrap = not wraps
+end
+
+map('n', '<leader>w', toggle_wrap, { desc = 'Start search' })
