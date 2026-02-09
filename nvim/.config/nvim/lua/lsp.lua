@@ -143,6 +143,9 @@ return {
               },
             },
           },
+          ty = {
+            filetype = { 'python' },
+          },
         },
       }
     end,
