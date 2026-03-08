@@ -1,7 +1,8 @@
 export NNN_PLUG='p:preview-tui;f:finder;v:imgview'
 export NNN_FCOLORS=''
 export NNN_FIFO='/tmp/nnn.fifo'
-# export NNN_OPENER="nvim"
+export VISUAL=nvim
+export NNN_OPENER=nvim
 
 f ()
 {
@@ -25,7 +26,7 @@ f ()
 
     # The command builtin allows one to alias nnn to n, if desired, without
     # making an infinitely recursive alias
-    command nnn -a -A "$@"
+    command nnn -a -A -e "$@"
 
     [ ! -f "$NNN_TMPFILE" ] || {
         . "$NNN_TMPFILE"
