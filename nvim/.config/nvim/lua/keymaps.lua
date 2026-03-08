@@ -26,6 +26,8 @@ map('v', '>', '>gv')
 -- quickfix
 map('n', '[q', vim.cmd.cprev, { desc = 'Previous quickfix' })
 map('n', ']q', vim.cmd.cnext, { desc = 'Next quickfix' })
+map('n', '<leader>qo', ':cope<CR>', { desc = 'Open quickfix list' })
+map('n', '<leader>qc', ':ccl<CR>', { desc = 'Close quickfix list' })
 
 map('n', '<leader>xl', '<cmd>lopen<cr>', { desc = 'Location List' })
 map('n', '<leader>xq', '<cmd>copen<cr>', { desc = 'Quickfix List' })
@@ -37,8 +39,11 @@ map('n', 'L', '<cmd>bnext<cr>', { desc = 'Next buffer' })
 -- file manipulation
 map('n', '<leader>nf', ':e %:h/', { desc = 'Edit file relative to path' })
 map('n', '<leader>nd', ':!mkdir -p %:h/', { desc = 'Create dir' })
+
+-- lsp
 map('n', 'gdd', ':lua vim.lsp.buf.definition()<cr>', { desc = '[g]o To [d]efinition' })
 
+-- other
 map('n', 'S', '/', { desc = 'Start search' })
 
 -- toggle wrap
