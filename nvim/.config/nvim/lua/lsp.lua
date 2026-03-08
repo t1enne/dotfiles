@@ -98,6 +98,7 @@ return {
         autoformat = true,
         format = { formatting_options = nil, timeout_ms = nil },
         servers = {
+          gopls = {},
           denols = {
             root_dir = function(fname)
               if require('lspconfig.util').root_pattern 'deno.json'(fname) then
@@ -145,6 +146,9 @@ return {
           },
           ty = {
             filetype = { 'python' },
+          },
+          jsonls = {
+            filetype = { 'json' },
           },
         },
       }
