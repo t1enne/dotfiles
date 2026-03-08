@@ -100,7 +100,7 @@ function monitor() {
 }
 
 function sql() {
-		sq sql $@ --json
+		sq sql "$@" --json
 # 	# qr=`psql "$PG_C" --csv -c $1`
 # 	# exec 3>$2
 # 	# exec 2>/dev/null
