@@ -61,6 +61,7 @@ function help {
 	echo "    -N               Diables notifications on clients. Users will receive a notification with no sound."
 	echo "                     Can also be set in config as TELEGRAM_DISABLE_NOTIFICATION=true (see ENVIRONMENT)"
 	echo "    -m               Outputs the last received message. Format is: <Message ID> <Sender ID> <Chat ID> <Text>"
+	echo "    -L               Listen for incoming messages continuously (long polling)."
 	echo
 	echo "DEBUGGING OPTIONS are:"
 	echo "    -v               Display lots of more or less useful information."
@@ -133,6 +134,94 @@ function receive_message {
 	
 	jq -r '.result[-1].message | [(.message_id|tostring), (.from.id|tostring), (.chat.id|tostring), .text] | join(" ")' <<< "$result"
 	exit 0
+}
+
+function listen_messages {
+	if [ "$HAS_JQ" = false ]; then
+		echo "You need to have jq installed in order to be able to listen to messages."
+		exit 1
+	fi
+
+	local offset=0
+	local poll_timeout=${LISTEN_TIMEOUT:-30}
+	local allowed_chats="${ALLOWED_CHAT_IDS:-}"
+	
+	echo "Listening for messages... (Press Ctrl+C to stop)"
+	[ -n "$allowed_chats" ] && echo "Allowed chat IDs: $allowed_chats"
+	
+	while true; do
+		result=`curl $CURL_OPTIONS "$URL$TOKEN/getUpdates?offset=$offset&limit=100&timeout=$poll_timeout&allowed_updates=message"`
+		
+		if [ $? -ne 0 ]; then
+			echo "Error connecting to Telegram API. Retrying in 5 seconds..."
+			sleep 5
+			continue
+		fi
+		
+		updates=`jq -c '.result[]?' <<< "$result" 2>/dev/null`
+		
+		if [ -z "$updates" ]; then
+			continue
+		fi
+		
+		echo "$updates" | while read -r update; do
+			update_id=`jq -r '.update_id' <<< "$update"`
+			message_id=`jq -r '.message.message_id' <<< "$update"`
+			from_id=`jq -r '.message.from.id' <<< "$update"`
+			chat_id=`jq -r '.message.chat.id' <<< "$update"`
+			username=`jq -r '.message.from.username // empty' <<< "$update"`
+			first_name=`jq -r '.message.from.first_name // empty' <<< "$update"`
+			text=`jq -r '.message.text // empty' <<< "$update"`
+			date=`jq -r '.message.date' <<< "$update"`
+			
+			# Update offset to acknowledge this update
+			offset=$((update_id + 1))
+			
+			# Check if chat is allowed (if restriction is set)
+			if [ -n "$allowed_chats" ]; then
+				is_allowed=false
+				for allowed in $allowed_chats; do
+					if [ "$chat_id" = "$allowed" ] || [ "$from_id" = "$allowed" ]; then
+						is_allowed=true
+						break
+					fi
+					done
+				if [ "$is_allowed" = false ]; then
+					log "Ignoring message from unauthorized chat: $chat_id (from: $username)"
+					continue
+				fi
+			fi
+			
+			# Skip empty messages
+			if [ -z "$text" ]; then
+				continue
+			fi
+			
+			# Format timestamp
+			timestamp=`date -d "@$date" '+%Y-%m-%d %H:%M:%S' 2>/dev/null || date -r "$date" '+%Y-%m-%d %H:%M:%S' 2>/dev/null || echo "$date"`
+			
+			echo ""
+			echo "=== New Message at $timestamp ==="
+			echo "From: $first_name (@$username) [ID: $from_id]"
+			echo "Chat: $chat_id"
+			echo "Message ID: $message_id"
+			echo "---"
+			echo "$text"
+			echo "================================"
+			
+			# If a command handler is set, execute it
+			if [ -n "$MESSAGE_HANDLER" ] && [ -x "$MESSAGE_HANDLER" ]; then
+				export TG_MESSAGE_ID="$message_id"
+				export TG_FROM_ID="$from_id"
+				export TG_CHAT_ID="$chat_id"
+				export TG_USERNAME="$username"
+				export TG_FIRST_NAME="$first_name"
+				export TG_TEXT="$text"
+				export TG_DATE="$date"
+				"$MESSAGE_HANDLER" "$text" &
+			fi
+		done
+	done
 }
 		
 
@@ -210,7 +299,7 @@ function escapeMarkdown {
 	echo "$res"
 }
 
-while getopts "t:c:i:f:V:MHCrhlvjnRmDNT:" opt; do
+while getopts "t:c:i:f:V:MHCrhlvjnRmDNT:L:" opt; do
 	case $opt in
 		t)
 			TOKEN="$OPTARG"
@@ -258,6 +347,9 @@ while getopts "t:c:i:f:V:MHCrhlvjnRmDNT:" opt; do
 			;;
 		m)
 			ACTION="receive_message"
+			;;
+		L)
+			ACTION="listen_messages"
 			;;
 		D)
 			DISABLE_WEB_PAGE_PREVIEW=true
@@ -335,6 +427,11 @@ fi
 
 if [ "$ACTION" = "receive_message" ]; then
 	receive_message
+	exit 0
+fi
+
+if [ "$ACTION" = "listen_messages" ]; then
+	listen_messages
 	exit 0
 fi
 
