@@ -27,6 +27,34 @@ has_jq() {
     command -v jq &> /dev/null
 }
 
+# Check if pass is available
+has_pass() {
+    command -v pass &> /dev/null
+}
+
+# Check if a value is a pass reference (starts with "pass:")
+is_pass_ref() {
+    [[ "$1" == pass:* ]]
+}
+
+# Resolve a value that might be a pass reference
+# If value starts with "pass:", fetch from pass password manager
+# Otherwise return the value as-is
+resolve_secret() {
+    local value="$1"
+    if is_pass_ref "$value"; then
+        local pass_path="${value#pass:}"
+        if ! has_pass; then
+            echo "WARNING: pass command not found, cannot resolve: $pass_path" >&2
+            echo ""
+            return 1
+        fi
+        pass show "$pass_path" 2>/dev/null | head -1
+    else
+        echo "$value"
+    fi
+}
+
 # Load configuration from JSON file for a specific profile
 load_json_profile() {
     local profile="$1"
@@ -48,10 +76,12 @@ load_json_profile() {
     # Load profile settings
     SMTP_SERVER=$(jq -r '.profiles["'$profile'"].smtp.server // empty' "$JSON_CONFIG")
     SMTP_USER=$(jq -r '.profiles["'$profile'"].smtp.user // empty' "$JSON_CONFIG")
-    SMTP_PASSWORD=$(jq -r '.profiles["'$profile'"].smtp.password // empty' "$JSON_CONFIG")
+    local smtp_password=$(jq -r '.profiles["'$profile'"].smtp.password // empty' "$JSON_CONFIG")
+    SMTP_PASSWORD=$(resolve_secret "$smtp_password")
     IMAP_SERVER=$(jq -r '.profiles["'$profile'"].imap.server // empty' "$JSON_CONFIG")
     IMAP_USER=$(jq -r '.profiles["'$profile'"].imap.user // empty' "$JSON_CONFIG")
-    IMAP_PASSWORD=$(jq -r '.profiles["'$profile'"].imap.password // empty' "$JSON_CONFIG")
+    local imap_password=$(jq -r '.profiles["'$profile'"].imap.password // empty' "$JSON_CONFIG")
+    IMAP_PASSWORD=$(resolve_secret "$imap_password")
     FROM_ADDRESS=$(jq -r '.profiles["'$profile'"].from // empty' "$JSON_CONFIG")
     
     return 0
@@ -121,12 +151,26 @@ show_profile() {
     echo "SMTP:"
     echo "  Server: $(jq -r '.profiles["'$profile'"].smtp.server // "Not set"' "$JSON_CONFIG")"
     echo "  User: $(jq -r '.profiles["'$profile'"].smtp.user // "Not set"' "$JSON_CONFIG")"
-    echo "  Password: $([ -n "$(jq -r '.profiles["'$profile'"].smtp.password // empty' "$JSON_CONFIG")" ] && echo "********" || echo "Not set")"
+    local smtp_pwd=$(jq -r '.profiles["'$profile'"].smtp.password // empty' "$JSON_CONFIG")
+    if is_pass_ref "$smtp_pwd"; then
+        echo "  Password: [pass:${smtp_pwd#pass:}]"
+    elif [[ -n "$smtp_pwd" ]]; then
+        echo "  Password: ********"
+    else
+        echo "  Password: Not set"
+    fi
     echo ""
     echo "IMAP:"
     echo "  Server: $(jq -r '.profiles["'$profile'"].imap.server // "Not set"' "$JSON_CONFIG")"
     echo "  User: $(jq -r '.profiles["'$profile'"].imap.user // "Not set"' "$JSON_CONFIG")"
-    echo "  Password: $([ -n "$(jq -r '.profiles["'$profile'"].imap.password // empty' "$JSON_CONFIG")" ] && echo "********" || echo "Not set")"
+    local imap_pwd=$(jq -r '.profiles["'$profile'"].imap.password // empty' "$JSON_CONFIG")
+    if is_pass_ref "$imap_pwd"; then
+        echo "  Password: [pass:${imap_pwd#pass:}]"
+    elif [[ -n "$imap_pwd" ]]; then
+        echo "  Password: ********"
+    else
+        echo "  Password: Not set"
+    fi
     echo ""
     echo "From: $(jq -r '.profiles["'$profile'"].from // "Not set"' "$JSON_CONFIG")"
 }
