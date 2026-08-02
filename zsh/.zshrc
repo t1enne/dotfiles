@@ -17,35 +17,6 @@ plugins=(git vi-mode docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 
-# Lazy load heavy tools
-function pyenv() {
-    unfunction pyenv
-    eval "$(command pyenv init -)"
-    pyenv "$@"
-}
-
-function nvm() {
-		echo "loading nvm"
-		unset -f nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-    nvm "$@"
-}
-
-# Auto-use node 22 only when needed
-function node() {
-    if ! type -p node &> /dev/null; then
-        nvm use 24 >/dev/null 2>&1
-    fi
-    command node "$@"
-}
-
-function npm() {
-    if ! type -p npm &> /dev/null; then
-        nvm use 24 >/dev/null 2>&1
-    fi
-    command npm "$@"
-}
 
 # Shortcuts
 alias e="$EDITOR"
@@ -75,49 +46,94 @@ alias cdls="cd $HOME/Downloads"
 alias cdocs="cd $HOME/Documents"
 alias dots="cd $DOTS"
 
+alias uuid="cat /proc/sys/kernel/random/uuid"
+
 function print_colors() {
-  for i in {0..255}; do
-      printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"
-  done
+	for i in {0..255}; do
+		printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"
+	done
 }
 
 # ccode rust | deno | node etc.
 function ccode() {
-  p=$HOME/Documents/code
-  if [[ -n $1 ]]; then
-    p=$p/$1
-  fi
-  cd $p*
+	p=$HOME/Documents/code
+	if [[ -n $1 ]]; then
+		p=$p/$1
+	fi
+	cd $p*
 }
 
 function monitor() {
-  file=${@:1:1}
-  cmd=${@:2}
-  echo "Files: $file"
-  echo "Cmd: '$cmd'"
+	file=${@:1:1}
+	cmd=${@:2}
+	echo "Files: $file"
+	echo "Cmd: '$cmd'"
 	find -type f -name "$file" | entr eval $cmd
-  # while inotifywait -e close_write $file; do eval $cmd; done
+	# while inotifywait -e close_write $file; do eval $cmd; done
 }
 
 function sql() {
-		sq sql "$@" --json
-# 	# qr=`psql "$PG_C" --csv -c $1`
-# 	# exec 3>$2
-# 	# exec 2>/dev/null
-#  	#	echo $qr | sq '.data' -j "$@" 2>/dev/null || echo $qr
-# 	# exec 2>$3
+	sq sql "$@" --json
+	# 	# qr=`psql "$PG_C" --csv -c $1`
+	# 	# exec 3>$2
+	# 	# exec 2>/dev/null
+	#  	#	echo $qr | sq '.data' -j "$@" 2>/dev/null || echo $qr
+	# 	# exec 2>$3
 }
 
 function timestamp() {
 	date +"%Y%m%d%H%M"
 }
 
-alias uuid="cat /proc/sys/kernel/random/uuid"
+
+function sl() {
+	local source="${1:-$(basename "$PWD")}"
+	local target="${2:-$source}"
+
+	# If first arg is a file/path, use it; otherwise use current dir
+	if [[ -f "$1" || -d "$1" ]]; then
+		source="$1"
+		target="${2:-$(basename "$1")}"
+	fi
+
+	ln -s "$(realpath "$source")" "$HOME/.local/bin/$target"
+	echo "Created symlink: $HOME/.local/bin/$target -> $(realpath "$source")"
+}
+
+# Lazy load heavy tools
+function pyenv() {
+	unfunction pyenv
+	eval "$(command pyenv init -)"
+	pyenv "$@"
+}
+
+function nvm() {
+	echo "loading nvm"
+	unset -f nvm
+	[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+	[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+	nvm "$@"
+}
+
+# Auto-use node 22 only when needed
+function node() {
+	if ! type -p node &> /dev/null; then
+		nvm use 24.11 >/dev/null 2>&1
+	fi
+	command node "$@"
+}
+
+function npm() {
+	if ! type -p npm &> /dev/null; then
+		nvm use 24.11 >/dev/null 2>&1
+	fi
+	command npm "$@"
+}
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-nvm use 24 &> /dev/null
+# nvm use 24.11 &> /dev/null
 
 # bun completions
 # [ -s "/home/nasmx/.bun/_bun" ] && source "/home/nasmx/.bun/_bun"
