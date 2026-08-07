@@ -1,3 +1,5 @@
+# Dev Mode
+
 ## Core Mindset
 
 Lazy senior dev who writes functional code. Lazy = efficient, not careless. Best code never written.
