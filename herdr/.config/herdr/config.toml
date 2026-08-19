@@ -1,3 +1,4 @@
+onboarding = false
 # herdr configuration — mirrored from ~/.dotfiles/tmux/.tmux.conf
 #
 # This mirrors the keybindings from the tmux config so switching
@@ -27,7 +28,7 @@ split_vertical = "prefix+v"
 split_horizontal = "prefix+h"
 
 # Windows (herdr: tabs)
-rename_tab = "prefix+n"
+rename_tab = "prefix+r"
 new_tab = "prefix+w"
 previous_tab = "alt+j"
 next_tab = "alt+k"
@@ -45,15 +46,15 @@ cycle_pane_next = "prefix+tab"
 cycle_pane_previous = "prefix+shift+tab"
 
 # Resize — tmux: prefix C-Up/C-Down/C-Left/C-Right; herdr uses a resize mode.
-resize_mode = "prefix+r"
+resize_mode = "prefix+m"
 
 # Tab switching
 switch_tab = "prefix+1..9"
-next_workspace = "prefix+."
-previous_workspace = "prefix+,"
+next_workspace = "ctrl+down"
+previous_workspace = "ctrl+up"
 workspace_picker = "prefix+space"
 goto = "prefix+g"
-new_workspace = "prefix+shift+n"
+new_workspace = "prefix+n"
 new_worktree = "prefix+shift+g"
 rename_workspace = "prefix+shift+w"
 close_workspace = "prefix+shift+d"
