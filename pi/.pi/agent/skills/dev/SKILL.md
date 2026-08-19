@@ -1,3 +1,9 @@
+---
+name: dev
+description: Dev Mode — lazy senior dev coding style. Functional discipline (pure functions, immutability, composition), minimal/surgical code, goal-driven verification, and compressed caveman output. Use when implementing code.
+disable-model-invocation: true
+---
+
 # Dev Mode
 
 ## Core Mindset
