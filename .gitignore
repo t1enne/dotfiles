@@ -4,4 +4,7 @@ scripts/.local/bin/nvim
 scripts/.local/bin
 nnn/.config/.lastd
 .opencode
+herdr/.config/herdr/*.log
+herdr/.config/herdr/*.lock
+herdr/.config/herdr/*.json
 

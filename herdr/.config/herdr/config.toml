@@ -1,0 +1,76 @@
+# herdr configuration — mirrored from ~/.dotfiles/tmux/.tmux.conf
+#
+# This mirrors the keybindings from the tmux config so switching
+# between tmux and herdr is painless. Mapping legend (tmux -> herdr):
+#   prefix C-Space  -> prefix ctrl+space
+#   v (split -h)    -> split_vertical   (side-by-side / to the right)
+#   h (split -v)    -> split_horizontal (top/bottom / down)
+#   n (rename)      -> rename_tab
+#   w (new window)  -> new_tab
+#   M-j / M-k       -> previous_tab / next_tab
+#   Alt-h/j/k/l     -> focus_pane_*  (direct pane navigation)
+#   prefix C-arrows -> resize_mode
+
+[theme]
+# Your tmux used dark backgrounds (colour232/246) with green accents;
+# gruvbox mirrors that feel closest.
+name = "kanagawa"
+
+[keys]
+# Prefix key (tmux: set -g prefix C-Space)
+prefix = "ctrl+space"
+
+# Splits — mirror tmux exactly:
+#   v -> split-window -h (side-by-side, "right")
+#   h -> split-window -v (top/bottom, "down")
+split_vertical = "prefix+v"
+split_horizontal = "prefix+h"
+
+# Windows (herdr: tabs)
+rename_tab = "prefix+n"
+new_tab = "prefix+w"
+previous_tab = "alt+j"
+next_tab = "alt+k"
+
+# Pane navigation — tmux used direct C-h/j/k/l (with nvim passthrough).
+focus_pane_left = "ctrl+h"
+focus_pane_down = "ctrl+j"
+focus_pane_up = "ctrl+k"
+focus_pane_right = "ctrl+l"
+
+# Closing panes, zoom, last pane — keep sensible defaults.
+close_pane = "prefix+x"
+zoom = "prefix+z"
+cycle_pane_next = "prefix+tab"
+cycle_pane_previous = "prefix+shift+tab"
+
+# Resize — tmux: prefix C-Up/C-Down/C-Left/C-Right; herdr uses a resize mode.
+resize_mode = "prefix+r"
+
+# Tab switching
+switch_tab = "prefix+1..9"
+next_workspace = "prefix+."
+previous_workspace = "prefix+,"
+workspace_picker = "prefix+space"
+goto = "prefix+g"
+new_workspace = "prefix+shift+n"
+new_worktree = "prefix+shift+g"
+rename_workspace = "prefix+shift+w"
+close_workspace = "prefix+shift+d"
+
+# Sidebar / misc
+detach = "prefix+q"
+reload_config = "prefix+shift+r"
+edit_scrollback = "prefix+e"
+settings = "prefix+s"
+toggle_sidebar = "prefix+b"
+
+[ui]
+# tmux had status on top — keep herdr's tab row on top.
+tab_bar_position = "top"
+# Dark, minimal look matching the tmux status bar.
+accent = "#98971a"
+
+show_agent_labels_on_pane_borders = false
+[ui.toast]
+delivery = "terminal"
