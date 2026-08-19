@@ -46,7 +46,7 @@ Concrete, implementable plan:
 2. **Modules & ownership** — created vs modified.
 3. **Types** — every type/model introduced.
 4. **Function signatures** — each with types and one-line contract.
-5. **Call graph** — production flow and, if different, tests flow, in call-graph format (plain text, indented → arrows, ts code block).
+5. **Call graph** — production flow and, if different, tests flow, in call-graph format (plain text, indented → arrows, ts code block). Every call edge is annotated with its full signature (param names + types, return type).
 6. **Verification** — one runnable assertion-based check per non-trivial logic. No frameworks.
 7. **YAGNI notes** — what is NOT built and why.
 
@@ -54,29 +54,35 @@ Concrete, implementable plan:
 
 Before finalizing, present call graph. Confirm with user. Ask: every edge intended? Anything missing? Don't proceed until user seen and accepted graph. When showing call graphs, execution flows, or architecture traces, use this format:
 
+Each call edge is annotated inline with its full signature: `func(param: Type, ...): ReturnType`. Show every param's name and type plus the return type. Omit nothing — the graph alone must let the reader trace the data flow.
+
 Production:
 
-```
+```ts
 HTTP handlers
-  → ComponentA
-    → ComponentA.layerX
-      → ComponentB
-        → ComponentC
+  → register(req: IncomingRequest): Result<Session, Err> --> component/register
+    → buildSession(name: string, opts: SessionOpts): Session
+      → validateName(name: string): Result<string, Err> --> component/register
+      → normalizeOpts(opts: SessionOpts): SessionOpts --> lib/normalize
+        → bindComponent(c: Component): BoundComponent --> component/bind
+          → createLayer(maxDepth: number): Layer
 ```
 
 Tests:
 
-```
+```ts
 HTTP handlers
-  → ComponentA
-    → componentMemoryLayer
-      → ComponentA.layer
-        → ComponentB.layerMemory
+  → register(req: IncomingRequest): Result<Session, Err>
+    → memoryLayer(maxDepth: number): Layer
+      → buildSession(name: string, opts: SessionOpts): Session
+        → validateName(name: string): Result<string, Err>
 ```
 
 - Plain text only, no rendered diagrams
 - Indented → arrows for hierarchy
 - ts code block
+- Every edge carries `fn(param: Type, ...): ReturnType` — params, their types, and return type explicit
+- Append `--> module/name` target labels when call crosses a module boundary
 - Production and Tests as separate sections when they differ
 - Include call graphs in project overviews, architecture summaries, code explanations
 
