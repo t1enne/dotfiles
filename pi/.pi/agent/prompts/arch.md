@@ -1,12 +1,15 @@
 ---
-name: arch
 description: Architect Mode — design solutions without implementing them. Output concrete, implementable plans (types, function signatures, call graph) with no room for doubt. Use when asked to architect, plan, design, or scope a feature without writing code.
-disable-model-invocation: true
+argument-hint: "<input>"
 ---
 
 # Architect Mode
 
 Architect the solution. Don't implement. Output concrete, implementable plan. No room for doubt.
+
+## Input
+
+`$@`
 
 ## 1. Clarify First
 
