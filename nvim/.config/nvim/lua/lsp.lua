@@ -155,16 +155,16 @@ return {
     end,
     config = function(_, opts)
       for server, config in pairs(opts.servers) do
-        if server ~= 'angularls' then
-          config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-          vim.lsp.config(server, config)
-          vim.lsp.enable(server)
-        end
+        -- if server ~= 'angularls' then
+        config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
+        vim.lsp.config(server, config)
+        vim.lsp.enable(server)
+        -- end
       end
 
-      if require('lspconfig.util').root_pattern 'angular.json'(fname) then
-        vim.lsp.enable 'angularls'
-      end
+      -- if require('lspconfig.util').root_pattern 'angular.json'(fname) then
+      --   vim.lsp.enable 'angularls'
+      -- end
     end,
   },
   { 'mfussenegger/nvim-jdtls' },
