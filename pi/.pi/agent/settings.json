@@ -1,0 +1,18 @@
+{
+  "lastChangelogVersion": "0.84.3",
+  "defaultProvider": "deepseek",
+  "defaultModel": "deepseek-v4-flash",
+  "defaultThinkingLevel": "off",
+  "hideThinkingBlock": true,
+  "quietStartup": false,
+  "packages": ["npm:context-mode", "npm:pi-subagents"],
+  "extensions": [
+    "./extensions/mask-env.ts",
+    "./extensions/beep-on-complete.ts"
+  ],
+  "enabledModels": [
+    "openrouter/moonshotai/kimi-k3",
+    "deepseek/deepseek-v4-flash"
+  ],
+  "theme": "dark"
+}
