@@ -14,5 +14,12 @@
     "openrouter/moonshotai/kimi-k3",
     "deepseek/deepseek-v4-flash"
   ],
-  "theme": "dark"
+  "theme": "dark",
+  "subagents": {
+    "agentOverrides": {
+      "worker": {
+        "thinking": "off"
+      }
+    }
+  }
 }
