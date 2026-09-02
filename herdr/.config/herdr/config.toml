@@ -32,6 +32,8 @@ rename_tab = "prefix+r"
 new_tab = "prefix+w"
 previous_tab = "alt+j"
 next_tab = "alt+k"
+next_workspace = "alt+l"
+previous_workspace = "alt+h"
 
 # Pane navigation — tmux used direct C-h/j/k/l (with nvim passthrough).
 focus_pane_left = "ctrl+h"
@@ -42,16 +44,12 @@ focus_pane_right = "ctrl+l"
 # Closing panes, zoom, last pane — keep sensible defaults.
 close_pane = "prefix+x"
 zoom = "prefix+z"
-cycle_pane_next = "prefix+tab"
-cycle_pane_previous = "prefix+shift+tab"
 
 # Resize — tmux: prefix C-Up/C-Down/C-Left/C-Right; herdr uses a resize mode.
 resize_mode = "prefix+m"
 
 # Tab switching
 switch_tab = "prefix+1..9"
-next_workspace = "ctrl+down"
-previous_workspace = "ctrl+up"
 workspace_picker = "prefix+space"
 goto = "prefix+g"
 new_workspace = "prefix+n"
