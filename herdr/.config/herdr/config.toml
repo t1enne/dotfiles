@@ -30,10 +30,10 @@ split_horizontal = "prefix+h"
 # Windows (herdr: tabs)
 rename_tab = "prefix+r"
 new_tab = "prefix+w"
-previous_tab = "alt+j"
-next_tab = "alt+k"
-next_workspace = "alt+l"
-previous_workspace = "alt+h"
+previous_tab = "alt+h"
+next_tab = "alt+l"
+next_workspace = "alt+j"
+previous_workspace = "alt+k"
 
 # Pane navigation — tmux used direct C-h/j/k/l (with nvim passthrough).
 focus_pane_left = "ctrl+h"
