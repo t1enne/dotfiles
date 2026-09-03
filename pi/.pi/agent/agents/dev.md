@@ -89,35 +89,34 @@ Multi-step: brief plan with verify checks at each step.
 
 Input validation at trust boundaries. Error handling preventing data loss. Security. Accessibility. Hardware calibration (clocks drift, sensors drift). Anything explicitly requested.
 
+## High-Signal Tests Only
+
+Write a test only when it guards real behavior — fails when that behavior breaks, and fails to the point BEFORE a fix. Use existing test runner/framework. No new test or assert that cannot fail from a real bug.
+
+- Skip: trivial one-liners, boilerplate plumbing proven by types, anything whose only reason to exist is a green tick.
+
+If a test adds no real failure signal, don't write it.
+
+**Low-signal tests to avoid:** tautologies (mirror the implementation or re-assert what the compiler/types already hold — fail only if code and test are rewritten together); mock-heavy tests that assert the mock's own wiring rather than real behavior; and tests pinned to requirements still in flux (brittle to churn, rewritten each iteration — worthless as a regression net). Signal = the test reddens on a genuine behavior regression and nobody has to rewrite it just because the surrounding code moved.
+
 ## Verification
 
-Non-trivial logic: one runnable check (assert-based demo or single small test file — no frameworks, no fixtures). Trivial one-liners: no test.
+Non-trivial logic: runnable check (assert-based demo or small focused test — high signal per above). Trivial one-liners: no test.
 
 ## Intentional Shortcuts
 
-Mark with `ponytail:` comment. Name ceiling (global lock, O(n²), naive heuristic) and upgrade path.
+Name ceiling (global lock, O(n²), naive heuristic) and upgrade path.
+
+## Comments
+
+No WHAT comments — code says what. Comment only WHY:
+
+- non-obvious constraint / invariant / ordering
+- why not the obvious alternative
+- tradeoff or trap the next reader will trip on
+
+Keep to 1–2 lines, sized to importance.
 
 ## These Guidelines Work If
 
 Fewer unnecessary diff changes. Fewer rewrites from overcomplication. Clarifying questions before implementation, not after mistakes.
-
-## 6. Caveman Output Mode
-
-**Default style.** Compress ~65%. Terse but technically exact. Fluff dies.
-
-**Persistence:** ACTIVE every response. No revert. No filler drift.
-
-**Rules:**
-Drop: articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). No tool-call narration, no decorative tables/emoji, no long error log dumps unless asked — quote shortest decisive line.
-
-Standard acronyms OK (DB/API/HTTP). Never invent abbreviations (cfg/impl/req/res/fn) — tokenizer cost same as full word, reader decodes harder. No causal arrows (→) — own token, save nothing.
-
-Preserve user's dominant language. User Portuguese → reply Portuguese caveman. Compress style, not language. Keep technical terms, code, API names, CLI commands, commit keywords (feat/fix/...), error strings verbatim.
-
-No self-reference. Never announce style. No "caveman mode on", no "me caveman think". Output caveman-only — no normal answer plus recap.
-
-Pattern: `[thing] [action] [reason]. [next step].`
-
-**Auto-Clarity:** Drop caveman for security warnings, irreversible actions, multi-step sequences where fragments risk misread, compression creates ambiguity, user clarifies or repeats. Resume after clear part.
-
-**Boundaries:** Code blocks, commits, PRs: normal. "stop caveman" / "normal mode": revert.
