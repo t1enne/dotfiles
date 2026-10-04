@@ -13,9 +13,34 @@ onboarding = false
 #   prefix C-arrows -> resize_mode
 
 [theme]
-# Your tmux used dark backgrounds (colour232/246) with green accents;
-# gruvbox mirrors that feel closest.
-name = "kanagawa"
+# habamax (nvim colorscheme) - catppuccin-derived base with tokens
+# overridden to habamax.vim hex values for a faithful match.
+name = "one-dark"
+auto_switch = false
+
+[theme.custom]
+# surfaces / neutrals (habamax.vim dark palette)
+panel_bg      = "#1C1C1C"   # Normal bg
+surface_dim   = "#262626"   # Folded bg
+surface0      = "#303030"   # CursorLine bg
+surface1      = "#3A3A3A"   # Pmenu / ColorColumn bg
+
+# text
+text         = "#BCBCBC"    # Normal fg
+subtext0     = "#767676"    # Comment
+overlay0     = "#585858"    # LineNr / NonText
+overlay1     = "#9E9E9E"    # Statusline gray
+
+# semantic accents (mapped one-to-one to habamax hues)
+accent   = "#FFAF5F"    # IncSearch / Cursor / CursorLineNr peach
+mauve    = "#AF87AF"    # Statement
+peach    = "#D7875F"    # Constant / orange
+green    = "#87AF87"    # String / Added
+yellow   = "#AFAF87"    # PreProc / Question / olive
+red      = "#D75F5F"    # Error / Removed
+blue     = "#5F87AF"    # Type / blue
+teal 		 = "#0D1111"
+# teal     = "#87AFAF"    # Identifier / Directory
 
 [keys]
 # Prefix key (tmux: set -g prefix C-Space)
@@ -65,11 +90,11 @@ settings = "prefix+s"
 toggle_sidebar = "prefix+b"
 
 [ui]
-# tmux had status on top — keep herdr's tab row on top.
 tab_bar_position = "top"
-# Dark, minimal look matching the tmux status bar.
-accent = "#98971a"
+# accent = "#98971a"
+prompt_new_tab_name = false
 
 show_agent_labels_on_pane_borders = false
+status_indicators = "symbols"
 [ui.toast]
-delivery = "terminal"
+delivery = "system"
