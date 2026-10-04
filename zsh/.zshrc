@@ -7,7 +7,8 @@ setopt rcquotes
 zstyle ':omz:update' mode disabled
 
 # Theme and oh-my-zsh
-ZSH_THEME="gozilla"
+# habamax: custom theme recolored to match the nvim colorscheme (~/.oh-my-zsh/custom/themes/habamax.zsh-theme)
+ZSH_THEME="habamax"
 ENABLE_CORRECTION="false"
 VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
 VI_MODE_SET_CURSOR=true
@@ -86,25 +87,67 @@ function timestamp() {
 }
 
 
+# sl [src] [dest]  - symlink src (default: $PWD) at dest (default: ./basename(src))
+# src/dest may be relative or absolute; dest parent must exist.
 function sl() {
-	local src="${1:-$(basename "$PWD")}"
-	local target="${2:-$src}"
+	local src="${1:-$PWD}"
+	local dest="${2:-$(basename "$src")}"
 
-	# If first arg is a file/path, use it; otherwise use current dir
-	if [[ -f "$1" || -d "$1" ]]; then
-		src="$1"
-		target="${2:-$(basename "$1")}"
-	fi
+	[[ -e "$src" ]] || { echo "sl: no such file or directory: $src" >&2; return 1; }
 
-	ln -s "$(realpath "$src")" "$HOME/.local/bin/$target"
-	echo "Created symlink: $HOME/.local/bin/$target -> $(realpath "$src")"
+	local abs_src; abs_src="$(realpath "$src")" || return 1
+	local destdir; destdir="$(dirname "$dest")"
+	[[ -d "$destdir" ]] || { echo "sl: dest dir does not exist: $destdir" >&2; return 1; }
+
+	ln -s "$abs_src" "$dest" || return 1
+	echo "linked: $dest -> $abs_src"
 }
 
-# Lazy load heavy tools
-function pyenv() {
-	unfunction pyenv
-	eval "$(command pyenv init -)"
-	pyenv "$@"
+# ai: query pi. -c resumes last session (shared context). Plain -p "$@" for one-offs.
+#   ai @file.ts "review"     @-files auto-attach
+#   cmd | ai "summarize"     stdin merges into prompt
+function ai() {
+	pi -p "$*"
+}
+
+# pir: fuzzy-pick a pi session by folder/date (any working dir),
+# cd into that session's original cwd, then resume it.
+function pir() {
+	local -a rows
+	local f first cwd ts
+	for f in "$HOME"/.pi/agent/sessions/*/*.jsonl(Nom); do
+		read -r first < "$f" || continue
+		[[ $first == *'"type":"session"'* ]] || continue
+		[[ $first =~ '"cwd":"([^"]*)"' ]] && cwd=$match[1] || cwd='?'
+		[[ $first =~ '"timestamp":"([^"]*)"' ]] && ts=$match[1] || ts='?'
+		rows+=("$f"$'\t'"${ts[1,16]}"$'\t'"$cwd")
+	done
+	[[ ${#rows} -gt 0 ]] || { print -u2 'pir: no sessions found'; return 1 }
+
+	local sel
+	sel=$(print -rl -- "${rows[@]}" | fzf --delimiter=$'\t' --with-nth=2,3 --nth=2,1 \
+		--prompt='pi session> ' --no-sort \
+		--preview="grep -m1 '\"role\":\"user\"' {1} | jq -r '[.message.content[]? | select(.type==\"text\") | .text] | join(\" \")' 2>/dev/null" \
+		--preview-window='down,30%,border-top,wrap') || return 0
+	[[ -n $sel ]] || return 0
+
+	local file=${sel%%$'\t'*}
+	cwd=$(print -r -- "$sel" | cut -f3)
+	if [[ -d $cwd ]]; then
+		cd "$cwd" || return 1
+	else
+		print -u2 "pir: original dir gone ($cwd), staying in $PWD"
+	fi
+	pi --session "$file"
+}
+
+function yttext() {
+	local id="$1" 
+	local lang="${2:-en}" 
+	[[ -z "$id" ]] && { print -u2 "usage: yttext <id> [lang-chain]"; return 1 }
+	local out=$(youtube_transcript_api "$id" --format text --languages ${=lang}) || return 1
+	print -r -- "$out" | tr '\n' ' ' | tr -s ' ' | sed 's/^ //; s/ $//'
+	print
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
