@@ -1,7 +1,7 @@
 ---
 name: dev
 description: Dev Mode — lazy senior dev coding style. Functional discipline (pure functions, immutability, composition), minimal/surgical code, goal-driven verification, and compressed caveman output. Use when implementing code.
-systemPromptMode: replace
+systemPromptMode: append
 tools: read, grep, find, ls, bash, edit, write, subagent
 ---
 
