@@ -229,7 +229,16 @@ vim.keymap.set('n', '<leader>fl', ':lua require("telescope.builtin").find_files 
 vim.defer_fn(function()
   -- Install parsers (async). Add languages here as needed.
   require('nvim-treesitter').install {
-    'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash',
+    'go',
+    'lua',
+    'python',
+    'rust',
+    'tsx',
+    'javascript',
+    'typescript',
+    'vimdoc',
+    'vim',
+    'bash',
   }
 end, 0)
 
@@ -248,11 +257,17 @@ vim.api.nvim_create_autocmd('FileType', {
     -- Highlighting (built into Neovim).
     vim.treesitter.start(args.buf)
 
-    -- Folds (built into Neovim).
-    vim.wo[args.win][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-    vim.wo[args.win][0].foldmethod = 'expr'
+    -- -- Folds (built into Neovim). Window-local: set for every window showing this buffer.
+    -- local wins = vim.fn.win_findbuf(args.buf)
+    -- if #wins == 0 then
+    --   wins = { 0 }
+    -- end
+    -- for _, win in ipairs(wins) do
+    --   vim.wo[win].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    --   vim.wo[win].foldmethod = 'expr'
+    -- end
 
-    -- Experimental treesitter indentation.
+    -- Treesitter indentation (still marked experimental upstream).
     vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
   end,
 })
@@ -321,10 +336,10 @@ end)
 
 -- swap keymaps
 vim.keymap.set('n', '<leader>a', function()
-  require('nvim-treesitter-textobjects.swap').swap_next('@parameter.inner')
+  require('nvim-treesitter-textobjects.swap').swap_next '@parameter.inner'
 end)
 vim.keymap.set('n', '<leader>A', function()
-  require('nvim-treesitter-textobjects.swap').swap_previous('@parameter.inner')
+  require('nvim-treesitter-textobjects.swap').swap_previous '@parameter.inner'
 end)
 
 -- document existing key chains
