@@ -1,4 +1,4 @@
-source "$HOME/.zshscrt"
+source $HOME/.zshscrt
 export ZSH="$HOME/.oh-my-zsh"
 
 export NNN_PLUG='p:preview-tui;f:finder;v:imgview'
