@@ -144,18 +144,18 @@ return {
     config = function()
       local conform = require 'conform'
       local formatters_by_ft = {
-        javascript = { 'prettierd', 'biome' },
-        typescript = { 'prettierd', 'biome' },
-        javascriptreact = { 'prettierd', 'biome' },
-        typescriptreact = { 'prettierd', 'biome' },
+        javascript = { 'prettier', 'biome' },
+        typescript = { 'prettier', 'biome' },
+        javascriptreact = { 'prettier', 'biome' },
+        typescriptreact = { 'prettier', 'biome' },
         -- For other file types, keep using Prettier as before
-        css = { 'prettierd' },
-        html = { 'prettierd' },
-        json = { 'prettierd', 'biome' },
-        yaml = { 'prettierd' },
-        markdown = { 'prettierd' },
-        graphql = { 'prettierd' },
-        liquid = { 'prettierd' },
+        css = { 'prettier' },
+        html = { 'prettier' },
+        json = { 'prettier', 'biome' },
+        yaml = { 'prettier' },
+        markdown = { 'prettier' },
+        graphql = { 'prettier' },
+        liquid = { 'prettier' },
         lua = { 'stylua' },
         python = { 'ruff_format' },
       }
