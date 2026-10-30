@@ -1,0 +1,57 @@
+# Global .piignore for pi agent tool output masking (mask-env.ts extension)
+#
+# Any tool call that reads a path matching one of these patterns still runs,
+# but secret-looking values in the returned output are replaced with `*`.
+# Local .piignore files (project dir and ancestors) are read too and win
+# over this file. No patterns are hardcoded in the extension: this file is
+# the default set, so delete a line to stop masking that thing.
+#
+# Syntax: gitignore-ish. `#` comment, `!` un-include, `*`, `**`, `?`, `[a-z]`.
+# A pattern without `/` matches the basename at any depth.
+
+# --- shell / language env files ---
+.env
+.env.*
+*.env
+.envrc
+.zshscrt
+.zshrc.local
+.direnv/
+
+# templates contain placeholders, not secrets -- un-ignore them
+!.env.example
+!.env.sample
+!.env.template
+
+# --- keys and certs ---
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+id_rsa*
+id_ed25519*
+id_ecdsa*
+
+# --- credential stores ---
+.netrc
+.npmrc
+.pypirc
+.pgpass
+.htpasswd
+.aws/credentials
+.kube/config
+config/gcloud/application_default_credentials.json
+*credentials*.json
+*service-account*.json
+
+# --- app config that commonly holds keys ---
+config/secrets/*
+secrets/*
+*.secret
+*.secrets
+
+# --- CI/tooling secret files ---
+.terraform/terraform.tfstate
+*.tfvars
+terraform.tfstate*
