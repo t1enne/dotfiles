@@ -22,6 +22,7 @@ DRY_RUN=false
 IMAGE_FILE=""
 DOCUMENT_FILE=""
 VIDEO_FILE=""
+VOICE_FILE=""
 PARSE_MODE=""
 CODE_MODE=0
 CRON_MODE=0
@@ -299,7 +300,7 @@ function escapeMarkdown {
 	echo "$res"
 }
 
-while getopts "t:c:i:f:V:MHCrhlvjnRmDNT:L:" opt; do
+while getopts "t:c:i:f:V:A:MHCrhlvjnRmDNT:L:" opt; do
 	case $opt in
 		t)
 			TOKEN="$OPTARG"
@@ -315,6 +316,9 @@ while getopts "t:c:i:f:V:MHCrhlvjnRmDNT:L:" opt; do
 			;;
 		V)
 			VIDEO_FILE="$OPTARG"
+			;;
+		A)
+			VOICE_FILE="$OPTARG"
 			;;
 		M)
 			PARSE_MODE="Markdown"
@@ -495,8 +499,13 @@ if [ -n "$TITLE" ]; then
 	fi
 fi
 
-if [ -z "$TEXT" ] && [ -z "$DOCUMENT_FILE" ] && [ -z "$VIDEO_FILE" ] && [ -z "$IMAGE_FILE" ] ; then
-	echo "Neither text nor image nor video or other file given."
+if [ -z "$TEXT" ] && [ -z "$DOCUMENT_FILE" ] && [ -z "$VIDEO_FILE" ] && [ -z "$IMAGE_FILE" ] && [ -z "$VOICE_FILE" ] ; then
+	echo "Neither text nor image nor video nor voice nor other file given."
+	exit 1
+fi
+
+if [ -n "$VOICE_FILE" ] && { [ -n "$DOCUMENT_FILE" ] || [ -n "$VIDEO_FILE" ] || [ -n "$IMAGE_FILE" ]; }; then
+	echo "You can't send a voice note AND another attachment at the same time."
 	exit 1
 fi
 
@@ -527,6 +536,12 @@ elif [ -n "$VIDEO_FILE" ]; then
 	CURL_OPTIONS="$CURL_OPTIONS --form video=@\"$VIDEO_FILE\""
 	CURL_OPTIONS="$CURL_OPTIONS --form caption=<-"
 	METHOD="sendVideo"
+elif [ -n "$VOICE_FILE" ]; then
+	check_file "$VOICE_FILE"
+
+	CURL_OPTIONS="$CURL_OPTIONS --form voice=@\"$VOICE_FILE\""
+	CURL_OPTIONS="$CURL_OPTIONS --form caption=<-"
+	METHOD="sendVoice"
 elif [ -n "$IMAGE_FILE" ]; then
 	check_file "$IMAGE_FILE"
 	CURL_OPTIONS="$CURL_OPTIONS --form photo=@\"$IMAGE_FILE\""
