@@ -49,6 +49,9 @@ alias dots="cd $DOTS"
 
 alias uuid="cat /proc/sys/kernel/random/uuid"
 
+# LAN IP of this host (default route interface)
+alias hostip="ip -4 route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if(\$i==\"src\") print \$(i+1); exit}'"
+
 function print_colors() {
 	for i in {0..255}; do
 		printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"
@@ -150,6 +153,95 @@ function yttext() {
 	print
 }
 
+function shortyt() {
+	local url="$1"
+	[[ -z "$url" ]] && { print -u2 "usage: shortyt <youtube-url> [lang-chain]"; return 1 }
+	local lang="${2:-en}"
+	local dir="${SHORTYT_DIR:-/tmp/shortyt}"
+	[[ -d "$dir" ]] || mkdir -p -- "$dir" || { print -u2 "shortyt: cannot create $dir"; return 1 }
+	[[ -w "$dir" ]] || { print -u2 "shortyt: $dir not writable"; return 1 }
+	local id=""
+	case "$url" in
+		*v=*)      id="${url##*v=}" ;;
+		youtu.be/*) id="${url#*youtu.be/}" ;;
+		*/shorts/*) id="${url##*/shorts/}" ;;
+		*/embed/*)  id="${url##*/embed/}" ;;
+		*)          id="$url" ;;
+	esac
+	id="${id%%[\&?#]*}"
+	[[ -z "$id" ]] && { print -u2 "shortyt: no video id in '$url'"; return 1 }
+
+	local text
+	text=$(yttext "$id" "$lang") || return 1
+	[[ -z "$text" ]] && { print -u2 "shortyt: no transcript for $id"; return 1 }
+
+	local file="$dir/$id.md"
+	print -r -- "$text" | pi -p "Summarize this YouTube transcript (video $id). Split into sections, give title and description to each, then 5-8 bullet takeaways per section. Finally provide counter arguments and shortcomings from own research." | tee "$file"
+	local rc=$pipestatus[2]
+	[[ $rc -eq 0 ]] && print -u2 "shortyt: saved $file"
+	return $rc
+}
+
+# tts - text to speech -> ogg/opus, then play
+#   tts "hello world"
+#   shortyt <id> | tts
+#   tts -v <voice_id> -o out.ogg "text"
+#   tts -s "text"        # silent: build ogg, print path, no playback
+function tts() {
+	local script="${TTS_SH:-$HOME/Documents/helpers/tg/tts.sh}"
+	local out="" voice="" model="" silent=0
+
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+			-v|--voice) voice="$2"; shift 2 ;;
+			-m|--model) model="$2"; shift 2 ;;
+			-o|--out)   out="$2"; shift 2 ;;
+			-s|--silent) silent=1; shift ;;
+			--) shift; break ;;
+			*) break ;;
+		esac
+	done
+
+	[[ -f "$script" ]] && [[ -x "$script" ]] || { print -u2 "tts: not executable: $script"; return 1 }
+	command -v ffmpeg >/dev/null || { print -u2 "tts: ffmpeg missing"; return 1 }
+
+	local text=""
+	[[ ! -t 0 ]] && text="$(cat)"
+	(( $# )) && text="${text:+$text }${(j: :)@}"
+	[[ -z "${text//[[:space:]]/}" ]] && { print -u2 "tts: no text (usage: tts [opts] <text> | ... | tts)"; return 1 }
+
+	# one API call; eleven-turbo-v2.5 accepts ~40k chars
+	local max=38000
+	if (( ${#text} > max )); then
+		print -u2 "tts: text too long (${#text} chars, max $max) — trim it first"
+		return 1
+	fi
+
+	out="${out:-/tmp/tts_$(date +%Y%m%d_%H%M%S).ogg}"
+	[[ "$out" != /* ]] && out="$PWD/$out"
+
+	local -a opts
+	[[ -n "$voice" ]] && opts+=( -v "$voice" )
+	[[ -n "$model" ]] && opts+=( -m "$model" )
+
+	print -r -- "$text" | "$script" $opts - "$out" >/dev/null || {
+		print -u2 "tts: synthesis failed"
+		return 1
+	}
+
+	print -r -- "$out"
+	(( silent )) && return 0
+
+	if command -v ffplay >/dev/null; then
+		ffplay -nodisp -autoexit -loglevel quiet "$out"
+	elif command -v paplay >/dev/null; then
+		paplay "$out"
+	else
+		print -u2 "tts: no player (ffplay/paplay), file at $out"
+		return 1
+	fi
+}
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 autoload -Uz add-zsh-hook
@@ -182,3 +274,4 @@ nvm use 24.16 >/dev/null 2>&1
 
 # Load Angular CLI autocompletion.
 # source <(ng completion script)
+
