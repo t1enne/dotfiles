@@ -1,0 +1,581 @@
+#!/usr/bin/env python3
+"""ffpilot - minimal wrapper around geckodriver.
+
+Three jobs: attach geckodriver to a running (or freshly opened) Firefox, create
+one WebDriver session, and send requests to it. Everything else is geckodriver's
+job; `ffpilot raw METHOD PATH [BODY]` reaches every route of the WebDriver API.
+"""
+import argparse
+import http.client
+import json
+import os
+import shutil
+import socket
+import subprocess
+import sys
+import time
+
+ELEM = "element-6066-11e4-a52e-4f735466cecf"
+STATE = os.path.join(os.environ.get("XDG_RUNTIME_DIR") or "/tmp", "ffpilot.json")
+LOG = STATE + ".log"
+M_PORT = int(os.environ.get("FFPILOT_MARIONETTE", "2828"))
+G_PORT = int(os.environ.get("FFPILOT_PORT", "4444"))
+M_HOST = os.environ.get("FFPILOT_MARIONETTE_HOST", "127.0.0.1")
+G_HOST = os.environ.get("FFPILOT_GECKO_HOST", "127.0.0.1")
+
+SNAP_JS = r"""
+const limit = arguments[0] || 300;
+const sel = 'a,button,input,select,textarea,summary,label,[role=button],[role=link],[role=checkbox],[role=radio],[role=tab],[role=menuitem],[role=switch],[contenteditable=true]';
+const vis = el => { try { return el.checkVisibility ? el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}) : true; } catch (e) { return true; } };
+const name = el => (el.getAttribute('aria-label') || el.getAttribute('placeholder') || el.getAttribute('title') || el.innerText || el.value || '').trim().replace(/\s+/g, ' ').slice(0, 90);
+window.__ffp = [];
+const out = [];
+for (const el of document.querySelectorAll(sel)) {
+  if (out.length >= limit) break;
+  const r = el.getBoundingClientRect();
+  if (!vis(el) || r.width <= 0 || r.height <= 0) continue;
+  const i = window.__ffp.push(el) - 1;
+  let extra = '';
+  if (el.type === 'checkbox' || el.type === 'radio') extra = el.checked ? ' checked' : '';
+  else if (el.tagName === 'A' && el.getAttribute('href')) extra = ' -> ' + el.getAttribute('href').slice(0, 80);
+  else if ('value' in el && el.value && el.type !== 'password') extra = ' = ' + String(el.value).slice(0, 80);
+  if (el.disabled) extra += ' disabled';
+  out.push('@' + i + ' ' + el.tagName.toLowerCase() + (el.type ? '[' + el.type + ']' : '') +
+    (el.id ? '#' + el.id : '') + ' "' + name(el) + '"' + extra);
+}
+return out.join('\n');
+"""
+
+WAIT_JS = r"""
+const sel = arguments[0], js = arguments[1], deadline = Date.now() + Number(arguments[2] || 10000);
+const done = arguments[arguments.length - 1];
+(function poll() {
+  let ok = false;
+  try {
+    if (js) ok = !!(new Function('return (' + js + ')')());
+    else { const el = document.querySelector(sel); ok = !!(el && (el.checkVisibility ? el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}) : true)); }
+  } catch (e) { ok = false; }
+  if (ok) return done(true);
+  if (Date.now() > deadline) return done(false);
+  setTimeout(poll, 50);
+})();
+"""
+
+KEYS = {"enter": "\ue007", "return": "\ue007", "tab": "\ue004", "esc": "\ue00c",
+        "backspace": "\ue003", "up": "\ue013", "down": "\ue015", "left": "\ue012",
+        "right": "\ue014", "home": "\ue011", "end": "\ue010", "space": " ",
+        "ctrl": "\ue009", "shift": "\ue008", "alt": "\ue00a", "meta": "\ue03d"}
+
+
+class WDError(Exception):
+    def __init__(self, error, message):
+        self.error, self.message = error, message
+        super().__init__("%s: %s" % (error, message))
+
+
+def die(msg, code=3):
+    sys.stderr.write("ffpilot: %s\n" % msg)
+    sys.exit(code)
+
+
+def fmt(val):
+    if val is None:
+        return "null"
+    return val if isinstance(val, str) else json.dumps(val, separators=(",", ":"), ensure_ascii=False)
+
+
+class WD:
+    """Thin WebDriver client: one HTTP connection, requests as routes."""
+
+    def __init__(self, host, port, sid=None):
+        self.host, self.port, self.sid = host, port, sid
+        self.conn = http.client.HTTPConnection(host, port, timeout=60)
+
+    def call(self, method, path, body=None, timeout=None):
+        if timeout:
+            self.conn.timeout = timeout
+        data = json.dumps(body).encode() if body is not None else None
+        headers = {"Content-Type": "application/json; charset=utf-8"} if data else {}
+        for attempt in (0, 1):
+            try:
+                self.conn.request(method, path, body=data, headers=headers)
+                raw = self.conn.getresponse().read()
+                break
+            except (http.client.HTTPException, OSError) as exc:
+                self.conn.close()
+                self.conn = http.client.HTTPConnection(self.host, self.port, timeout=60)
+                if attempt or isinstance(exc, socket.timeout):
+                    raise WDError("connection", "geckodriver unreachable at %s:%d: %s"
+                                  % (self.host, self.port, exc))
+        try:
+            val = json.loads(raw or b"null")
+        except ValueError:
+            raise WDError("bad response", raw[:200].decode("utf-8", "replace"))
+        if isinstance(val, dict) and isinstance(val.get("value"), dict) and "error" in val["value"]:
+            err = val["value"]
+            raise WDError(err.get("error", "unknown"),
+                          (err.get("message") or "").strip().split("\n")[0][:400])
+        return val.get("value") if isinstance(val, dict) and "value" in val else val
+
+    def el(self, path):
+        return "/session/%s%s" % (self.sid, path)
+
+    def elem(self, spec):
+        if spec.get("ref") is not None:
+            e = self.script("return window.__ffp[arguments[0]] || null",
+                            [int(str(spec["ref"]).lstrip("@"))])
+            if not e:
+                raise WDError("stale ref", "ref %s gone; run `ffpilot snap`" % spec["ref"])
+            return e[ELEM] if isinstance(e, dict) else e
+        sel = spec.get("sel") or spec.get("selector")
+        if not sel:
+            raise WDError("invalid argument", "needs `sel` or `ref`")
+        e = self.call("POST", self.el("/element"), {"using": "css selector", "value": sel})
+        return e[ELEM] if isinstance(e, dict) else e
+
+    def script(self, body, args=None, timeout=None):
+        return self.call("POST", self.el("/execute/sync"),
+                         {"script": body, "args": args or []}, timeout=timeout)
+
+    def ascript(self, body, args=None, timeout=None):
+        return self.call("POST", self.el("/execute/async"),
+                         {"script": body, "args": args or []}, timeout=timeout)
+
+
+def load_state():
+    try:
+        with open(STATE) as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return None
+
+
+def save_state(st):
+    with open(STATE, "w") as fh:
+        json.dump(st, fh)
+
+
+def wd_from_state():
+    st = load_state()
+    if not (st and st.get("session")):
+        die("no session; run `ffpilot start --connect` or `ffpilot start --new-window`")
+    return WD(st.get("host") or G_HOST, st["port"], st["session"]), st
+
+
+def live_session():
+    st = load_state()
+    if not (st and st.get("session") and st.get("port")):
+        return None, None
+    try:
+        wd = WD(st.get("host") or G_HOST, st["port"], st["session"])
+        wd.call("GET", wd.el("/url"), timeout=2)
+        return wd, st
+    except WDError:
+        return None, None
+
+
+def port_open(host, port, timeout=0.4):
+    try:
+        socket.create_connection((host, port), timeout).close()
+        return True
+    except OSError:
+        return False
+
+
+def is_wsl():
+    try:
+        with open("/proc/version") as fh:
+            return "microsoft" in fh.read().lower()
+    except OSError:
+        return False
+
+
+def handshake(host, port, timeout=1.0):
+    """True only if something speaks Marionette there (not just an open port)."""
+    s = None
+    try:
+        s = socket.create_connection((host, port), timeout)
+        s.settimeout(timeout)
+        msg = json.dumps({"applicationType": "gecko", "marionetteProtocol": 3}).encode()
+        s.sendall(b"%d:%s" % (len(msg), msg))
+        buf = b""
+        while b":" not in buf or len(buf.split(b":", 1)[1]) < int(buf.split(b":", 1)[0] or 0):
+            chunk = s.recv(64)
+            if not chunk:
+                return False
+            buf += chunk
+        head, _, rest = buf.partition(b":")
+        need = int(head) - len(rest)
+        if need > 0:
+            rest += s.recv(need)
+        return json.loads(rest.decode("utf-8", "replace")).get("applicationType") == "gecko"
+    except (OSError, ValueError):
+        return False
+    finally:
+        if s:
+            s.close()
+
+
+def marionette_hosts(host):
+    """Loopback, plus the WSL default gateway when loopback fails."""
+    out = [host]
+    if is_wsl() and host in ("127.0.0.1", "localhost"):
+        try:
+            route = subprocess.run(["ip", "route"], capture_output=True, text=True, timeout=2).stdout
+            for line in route.splitlines():
+                if line.startswith("default via "):
+                    out.append(line.split()[2])
+        except Exception:
+            pass
+    return out
+
+
+def find_marionette(port, host=None, tries=1):
+    for attempt in range(tries):
+        for cand in marionette_hosts(host or M_HOST):
+            if handshake(cand, port):
+                return cand
+        if attempt + 1 < tries:
+            time.sleep(0.3)
+    return None
+
+
+def firefox_binary():
+    for name in ("firefox", "firefox-esr"):
+        path = shutil.which(name)
+        if path:
+            return path
+    if is_wsl():
+        for cand in ("/mnt/c/Program Files/Mozilla Firefox/firefox.exe",
+                     "/mnt/c/Program Files/Firefox Developer Edition/firefox.exe",
+                     "/mnt/c/Program Files (x86)/Mozilla Firefox/firefox.exe"):
+            if os.path.exists(cand):
+                return cand
+    return None
+
+
+def open_window(url, marionette):
+    binary = firefox_binary()
+    if not binary:
+        die("firefox not found (PATH, or /mnt/c Program Files under WSL)")
+    cmd = [binary, "--marionette", "--marionette-port", str(marionette), "--new-window"]
+    subprocess.Popen(cmd + ([url] if url else []), stdout=subprocess.DEVNULL,
+                     stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, start_new_session=True)
+
+
+def attach(args, mhost, marionette):
+    ghost = args.gecko_host or G_HOST
+    port = int(args.port or G_PORT)
+    proc = None
+    if ghost in ("127.0.0.1", "localhost", "::1"):
+        if not shutil.which("geckodriver"):
+            die("geckodriver not in PATH")
+        while port_open(ghost, port):
+            port += 1
+        log = open(LOG, "ab")
+        proc = subprocess.Popen(
+            ["geckodriver", "--connect-existing", "--marionette-host", mhost,
+             "--marionette-port", str(marionette), "--port", str(port)],
+            stdout=log, stderr=log, stdin=subprocess.DEVNULL, start_new_session=True)
+        deadline = time.time() + 10
+        while time.time() < deadline and not port_open(ghost, port):
+            if proc.poll() is not None:
+                die("geckodriver exited; see %s" % LOG)
+            time.sleep(0.05)
+    elif not port_open(ghost, port):
+        die("no geckodriver at %s:%d; start one there (geckodriver --host 0.0.0.0)" % (ghost, port))
+    wd = WD(ghost, port)
+    caps = {"capabilities": {"alwaysMatch": {
+        "browserName": "firefox", "acceptInsecureCerts": True,
+        "timeouts": {"implicit": 0, "pageLoad": 60000, "script": 30000}}}}
+    try:
+        val = wd.call("POST", "/session", caps, timeout=20)
+    except WDError as exc:
+        if proc:
+            proc.kill()
+        die("session creation failed: %s (see %s)" % (exc, LOG))
+    sid = (val or {}).get("sessionId") if isinstance(val, dict) else None
+    if not sid:
+        die("session creation failed: %s" % fmt(val))
+    save_state({"host": ghost, "port": port, "pid": proc.pid if proc else None,
+                "session": sid, "marionette": marionette, "marionette_host": mhost})
+    print("ok mode=%s session=%s marionette=%s:%d"
+          % ("new-window" if args.new_window is not None else "connect", sid, mhost, marionette))
+
+
+MODE_HELP = """ffpilot: pick a mode, there is no default.
+
+  ffpilot start --connect      attach to the Firefox window already running
+  ffpilot start --new-window   open a new Firefox window, then attach
+                               (optional URL: --new-window https://example.com)
+
+Ask the user which one they want before running start."""
+
+
+def cmd_start(args):
+    if not (args.connect or args.new_window is not None):
+        die(MODE_HELP)
+    marionette = int(args.marionette or M_PORT)
+    wd, st = live_session()
+    if wd:
+        if args.new_window is not None:
+            open_window(args.new_window or None, marionette)
+        print("ok mode=%s session=%s (reused)"
+              % ("new-window" if args.new_window is not None else "connect", st["session"]))
+        return
+    if args.new_window is not None:
+        open_window(args.new_window or None, marionette)
+    mhost = find_marionette(marionette, tries=80 if args.new_window is not None else 1)
+    if not mhost:
+        die("nothing speaking Marionette on %s:%d.%s\n"
+            "Enable it: about:config marionette.enabled=true, marionette.port=%d, then restart.\n"
+            "Or open a window: ffpilot start --new-window [url]"
+            % (args.marionette_host or M_HOST, marionette,
+               " Port is open but the handshake failed: a session is likely already attached."
+               if port_open(args.marionette_host or M_HOST, marionette) else "",
+               marionette))
+    attach(args, mhost, marionette)
+
+
+def cmd_stop(args):
+    st = load_state()
+    if not st:
+        print("no session")
+        return
+    try:
+        WD(st.get("host") or G_HOST, st["port"], st["session"]).call(
+            "DELETE", "/session/%s" % st["session"], timeout=5)
+    except Exception:
+        pass
+    try:
+        pid = st.get("pid")
+        if pid and b"geckodriver" in open("/proc/%d/cmdline" % pid, "rb").read():
+            os.kill(pid, 15)
+    except (OSError, TypeError):
+        pass
+    try:
+        os.unlink(STATE)
+    except OSError:
+        pass
+    print("stopped")
+
+
+def cmd_status(args):
+    wd, st = live_session()
+    if not wd:
+        print(fmt({"live": False, "state": load_state()}))
+        return
+    print(fmt({"live": True, "host": wd.host, "port": st["port"], "session": st["session"],
+               "url": wd.call("GET", wd.el("/url"), timeout=3),
+               "title": wd.call("GET", wd.el("/title"), timeout=3)}))
+
+
+def cmd_doctor(args):
+    marionette = int(args.marionette or M_PORT)
+    host = args.marionette_host or M_HOST
+    wd, st = live_session()
+    info = {"geckodriver": shutil.which("geckodriver"), "firefox": firefox_binary(),
+            "wsl": is_wsl(), "marionette": "%s:%d" % (host, marionette),
+            "shared_session": bool(wd), "handshake": bool(wd) or find_marionette(marionette, host) is not None,
+            "state": st}
+    print(fmt(info))
+    sys.exit(0 if info["handshake"] else 3)
+
+
+def press(wd, keys):
+    chord = [k.strip().lower() for k in keys.replace(" ", "").split("+") if k.strip()]
+    if len(chord) == 1 and chord[0] in KEYS:
+        main, mods = [KEYS[chord[0]]], []
+    else:
+        main = [KEYS.get(chord[-1], chord[-1])]
+        mods = [KEYS[c] for c in chord[:-1] if c in KEYS]
+    seq = ([{"type": "keyDown", "value": m} for m in mods]
+           + [{"type": "keyDown", "value": m} for m in main]
+           + [{"type": "keyUp", "value": m} for m in reversed(main)]
+           + [{"type": "keyUp", "value": m} for m in reversed(mods)])
+    wd.call("POST", wd.el("/actions"), {"actions": [{"type": "key", "id": "kb", "actions": seq}]})
+
+
+def do_op(wd, op):
+    """Shortcuts we actually batch. Anything else: `raw`, `js`, or geckodriver."""
+    kind = op.get("op", "js")
+    if kind in ("js", "eval"):
+        body = op.get("script") or op.get("js")
+        if body is None:
+            raise WDError("invalid argument", "js op needs `script`")
+        if op.get("expr"):
+            body = "return (%s);" % body
+        fn = wd.ascript if op.get("async") else wd.script
+        return fn(body, op.get("args"), timeout=op.get("timeout"))
+    if kind == "goto":
+        wd.call("POST", wd.el("/url"), {"url": op["url"]}, timeout=op.get("timeout"))
+        return "ok"
+    if kind == "click":
+        wd.call("POST", wd.el("/element/%s/click" % wd.elem(op)), {}, timeout=op.get("timeout"))
+        return "ok"
+    if kind == "type":
+        eid = wd.elem(op)
+        if op.get("clear"):
+            wd.call("POST", wd.el("/element/%s/clear" % eid), {})
+        text = op.get("text", "")
+        wd.call("POST", wd.el("/element/%s/value" % eid), {"text": text, "value": list(text)})
+        if op.get("enter"):
+            press(wd, "Enter")
+        return "ok"
+    if kind == "key":
+        press(wd, op.get("keys") or op["key"])
+        return "ok"
+    if kind == "wait":
+        ms = int(op.get("timeout") or 10000)
+        if not wd.ascript(WAIT_JS, [op.get("sel"), op.get("js"), ms], timeout=ms / 1000.0 + 10):
+            raise WDError("timeout", "wait failed: %s" % (op.get("sel") or op.get("js")))
+        return "ok"
+    if kind == "snap":
+        text = wd.script(SNAP_JS, [op.get("limit") or 300])
+        return text.split("\n") if op.get("list") else text
+    if kind == "tabs":
+        cur = wd.call("GET", wd.el("/window"))
+        return [{"handle": h, "current": h == cur}
+                for h in wd.call("GET", wd.el("/window/handles"))]
+    if kind == "newtab":
+        handle = wd.call("POST", wd.el("/window/new"), {"type": "tab"})
+        handle = handle.get("handle") if isinstance(handle, dict) else handle
+        wd.call("POST", wd.el("/window"), {"handle": handle})
+        if op.get("url"):
+            wd.call("POST", wd.el("/url"), {"url": op["url"]})
+        return handle
+    if kind == "raw":
+        return wd.call(op["method"].upper(), wd.el(op["path"]), op.get("body"))
+    raise WDError("invalid argument", "unknown op %r (use js/raw, or geckodriver directly)" % kind)
+
+
+def cmd_batch(args):
+    src = sys.stdin.read() if not args.file or args.file == "-" else open(args.file).read()
+    try:
+        ops = json.loads(src)
+    except ValueError as exc:
+        die("batch input is not JSON: %s" % exc)
+    ops = ops.get("ops") if isinstance(ops, dict) else ops
+    wd, _ = wd_from_state()
+    results, failed = [], 0
+    for i, op in enumerate(ops):
+        try:
+            results.append(do_op(wd, op))
+            if not args.quiet:
+                print("#%d %s -> %s" % (i, op.get("op", "js"), fmt(results[-1])))
+        except WDError as exc:
+            failed += 1
+            results.append({"error": str(exc)})
+            if not args.quiet:
+                print("#%d %s !! %s" % (i, op.get("op", "?"), exc))
+            if not op.get("optional"):
+                break
+    if args.json:
+        print(json.dumps({"ok": failed == 0, "results": results},
+                         separators=(",", ":"), ensure_ascii=False))
+    if failed:
+        sys.exit(2)
+
+
+def cmd_js(args):
+    wd, _ = wd_from_state()
+    parsed = []
+    for a in args.arg or []:
+        try:
+            parsed.append(json.loads(a))
+        except ValueError:
+            parsed.append(a)
+    print(fmt(do_op(wd, {"op": "js", "script": args.script, "args": parsed,
+                         "expr": args.expr, "async": args.async_})))
+
+
+def cmd_snap(args):
+    wd, _ = wd_from_state()
+    print(fmt(do_op(wd, {"op": "snap", "limit": args.limit, "list": not args.json})))
+
+
+def cmd_op(args):
+    try:
+        op = json.loads(args.json)
+    except ValueError as exc:
+        die("op is not JSON: %s" % exc)
+    wd, _ = wd_from_state()
+    print(fmt(do_op(wd, op)))
+
+
+def cmd_raw(args):
+    body = None
+    if args.body:
+        try:
+            body = json.loads(args.body)
+        except ValueError:
+            body = args.body
+    wd, _ = wd_from_state()
+    print(fmt(wd.call(args.method.upper(), wd.el(args.path), body)))
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="ffpilot", description="minimal geckodriver wrapper")
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    p = sub.add_parser("start", help="attach geckodriver — requires --connect or --new-window")
+    mode = p.add_mutually_exclusive_group()
+    mode.add_argument("--connect", action="store_true", help="attach to the running Firefox window")
+    mode.add_argument("--new-window", nargs="?", const="", default=None, metavar="URL",
+                      help="open a new Firefox window (optional URL), then attach")
+    p.add_argument("--port", type=int, help="geckodriver port (default 4444)")
+    p.add_argument("--marionette", type=int, help="marionette port (default 2828)")
+    p.add_argument("--marionette-host", help="host running Firefox/Marionette")
+    p.add_argument("--gecko-host", help="host running an existing geckodriver (skip spawn)")
+    p.set_defaults(fn=cmd_start)
+
+    p = sub.add_parser("stop", help="end session, kill spawned geckodriver")
+    p.set_defaults(fn=cmd_stop)
+
+    p = sub.add_parser("status", help="session health, url, title")
+    p.set_defaults(fn=cmd_status)
+
+    p = sub.add_parser("doctor", help="prerequisites; exit 3 when Marionette is absent")
+    p.add_argument("--marionette", type=int)
+    p.add_argument("--marionette-host")
+    p.set_defaults(fn=cmd_doctor)
+
+    p = sub.add_parser("batch", help="JSON array of ops in one process")
+    p.add_argument("file", nargs="?", help="JSON file, or - / omit for stdin")
+    p.add_argument("--json", action="store_true")
+    p.add_argument("--quiet", action="store_true")
+    p.set_defaults(fn=cmd_batch)
+
+    p = sub.add_parser("js", help="execute a script (WebDriver body semantics)")
+    p.add_argument("script")
+    p.add_argument("-e", "--expr", action="store_true", help="treat script as expression")
+    p.add_argument("-a", "--async", dest="async_", action="store_true",
+                   help="async; callback is arguments[arguments.length-1]")
+    p.add_argument("--arg", action="append", help="JSON arg (repeatable)")
+    p.set_defaults(fn=cmd_js)
+
+    p = sub.add_parser("snap", help="compact ref-tagged interactive elements")
+    p.add_argument("--limit", type=int, default=300)
+    p.add_argument("--json", action="store_true")
+    p.set_defaults(fn=cmd_snap)
+
+    p = sub.add_parser("op", help="run one op object")
+    p.add_argument("json")
+    p.set_defaults(fn=cmd_op)
+
+    p = sub.add_parser("raw", help="any WebDriver route under the session")
+    p.add_argument("method")
+    p.add_argument("path")
+    p.add_argument("body", nargs="?")
+    p.set_defaults(fn=cmd_raw)
+
+    args = ap.parse_args()
+    try:
+        args.fn(args)
+    except WDError as exc:
+        sys.stderr.write("ffpilot: %s\n" % exc)
+        sys.exit(2)
+
+
+if __name__ == "__main__":
+    main()
