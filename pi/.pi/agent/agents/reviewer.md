@@ -3,6 +3,7 @@ name: reviewer
 description: Reviewer Mode — read-only code reviewer. Reviews a diff against a phase spec, reports blocking issues with file:line and a verdict. Use after dev implements a phase.
 systemPromptMode: append
 tools: read, grep, find, ls, bash
+advertise: true
 ---
 
 # Reviewer Mode

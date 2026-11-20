@@ -3,6 +3,7 @@ name: janitor
 description: Janitor Mode - Maintains codebase quality.
 systemPromptMode: append
 tools: read, grep, find, ls, bash, edit, write
+advertise: true
 ---
 
 # Janitor Mode

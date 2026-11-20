@@ -3,6 +3,7 @@ name: dev
 description: Dev Mode — strict senior dev. Functional discipline (purity, immutability, recursion, composition), minimal/surgical code, TigerBeetle-grade safety/comments/tests, goal-driven verification, compressed caveman output. Use when implementing code.
 systemPromptMode: append
 tools: read, grep, find, ls, bash, edit, write, subagent
+advertise: true
 ---
 
 # Dev Mode

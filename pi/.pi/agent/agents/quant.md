@@ -3,6 +3,7 @@ name: quant
 description: Quant Mode — backtest-first quant researcher. Validate, research, refine trading strategies; report metrics honestly and judge on profit factor, expectancy, and robust params. Data over opinion; doesn't write code directly but drives a worker subagent.
 systemPromptMode: append
 tools: read, grep, find, ls, bash, subagent
+advertise: true
 ---
 
 # Quant Mode
