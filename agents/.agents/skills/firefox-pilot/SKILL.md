@@ -25,8 +25,35 @@ There is **no default**. Never run `start` until the user chooses one:
 |---|---|---|
 | Connect | `ffpilot start --connect` | Attach to the Firefox window already open. Fails loudly if nothing speaks Marionette on 2828. |
 | New window | `ffpilot start --new-window [url]` | Ask Firefox for a new window (launching it with `--marionette` if none is running), then attach. |
+| New window, throwaway | `ffpilot start --new-window --fresh-profile [url]` | Same, on a disposable profile via `--new-instance`. The only safe choice while the user's Firefox is running without Marionette. |
 
 Ask exactly once, phrased like: *"Connect to your running Firefox, or open a new window?"* Do not infer from context, do not pick for them, do not fall back from one to the other. `start` with neither flag exits 2; both flags exits 2.
+
+## Preflight gate — `doctor` before `start`, always
+
+```bash
+ffpilot doctor      # exit 3 = not drivable yet
+```
+
+`doctor` now reports `firefox_running` and a `recommendation`. Read them before launching:
+
+| `firefox_running` | `handshake` | meaning |
+|---|---|---|
+| 0 | false | clean: `start --new-window` launches Firefox with Marionette |
+| >0 | false | **BLOCKED** — see below |
+| any | true | drivable: `start --connect` |
+
+**The trap:** when Firefox is already running, the `--marionette` flag is **silently ignored**. A second launch just opens a normal window that no geckodriver can attach to. `start --new-window` refuses this case (exit 3) instead of pretending to work. Do not work around the refusal by hand-rolling a `firefox … --marionette` command — it cannot succeed.
+
+Three recovery paths. A and B restart the user's browser and discard their tabs, so **the user picks, never you**:
+
+| Path | What | Cost |
+|---|---|---|
+| **A** | `about:config` → `marionette.enabled=true`, `marionette.port=2828`, then fully quit + reopen Firefox | their tabs/session restart |
+| **B** | quit Firefox, relaunch once with `--marionette --marionette-port 2828` | same as A, no pref change |
+| **C** | `ffpilot start --new-window --fresh-profile` | throwaway profile: no logins, no cookies, no extensions — the user signs in manually |
+
+C is the only option that touches nothing of theirs; offer it as the default proposal. Profile dir: `$FFPILOT_PROFILE` (default `/tmp/ffpilot-profile`). Never type credentials into it — hand the login to the user and wait.
 
 ## Prerequisites (once)
 
@@ -97,6 +124,7 @@ Marionette accepts **one client**. If the port is open but the handshake fails, 
 |---|---|
 | `start --connect` | Attach geckodriver `--connect-existing` to the running Firefox, create session, cache state |
 | `start --new-window [url]` | New Firefox window (spawning Firefox with Marionette if needed), then attach |
+| `start --new-window --fresh-profile [url]` | New window on a throwaway profile (`--new-instance --profile`), bypassing the running-instance block |
 | `stop` | Delete session, kill geckodriver, clear state |
 | `status` | Session health, current URL and title |
 | `doctor` | Prerequisite checklist, exit 3 if Marionette missing |
@@ -136,6 +164,7 @@ Routes, latency, ref cache: `references/webdriver.md`.
 | Symptom | Fix |
 |---|---|
 | `nothing listening on marionette port 2828` | Firefox not started with marionette; set prefs and restart, or rerun `start --new-window` |
+| `Firefox is already running (N process(es)) but nothing answers Marionette` | Working as intended. The flag is ignored by a live instance. Offer the user A/B/C from the preflight table; C needs no restart |
 | `error: one of the arguments --connect --new-window is required` | Working as intended — ask the user which mode, then pass it |
 | `geckodriver exited` | Check `$XDG_RUNTIME_DIR/ffpilot.json.log`; port already used |
 | `stale ref` | Page navigated or re-rendered; run `ffpilot snap` again |

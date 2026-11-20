@@ -13,6 +13,7 @@ import shutil
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 
 ELEM = "element-6066-11e4-a52e-4f735466cecf"
@@ -22,6 +23,8 @@ M_PORT = int(os.environ.get("FFPILOT_MARIONETTE", "2828"))
 G_PORT = int(os.environ.get("FFPILOT_PORT", "4444"))
 M_HOST = os.environ.get("FFPILOT_MARIONETTE_HOST", "127.0.0.1")
 G_HOST = os.environ.get("FFPILOT_GECKO_HOST", "127.0.0.1")
+PROFILE_DIR = os.environ.get("FFPILOT_PROFILE",
+                             os.path.join(tempfile.gettempdir(), "ffpilot-profile"))
 
 SNAP_JS = r"""
 const limit = arguments[0] || 300;
@@ -254,11 +257,36 @@ def firefox_binary():
     return None
 
 
-def open_window(url, marionette):
+def running_firefox():
+    """PIDs of a Firefox already up on this machine (Linux) or the Windows side (WSL).
+
+    Matters because `--marionette` is silently ignored when an instance is
+    already running: launching again opens a plain, non-automatable window.
+    """
+    try:
+        if is_wsl():
+            out = subprocess.run(
+                ["powershell.exe", "-NoProfile", "-Command",
+                 "(Get-Process firefox -ErrorAction SilentlyContinue).Id"],
+                capture_output=True, text=True, timeout=10).stdout
+        else:
+            out = subprocess.run(["pgrep", "-x", "firefox"],
+                                 capture_output=True, text=True, timeout=3).stdout
+    except Exception:
+        return []
+    return [int(t) for t in out.split() if t.isdigit()]
+
+
+def open_window(url, marionette, fresh=False):
     binary = firefox_binary()
     if not binary:
         die("firefox not found (PATH, or /mnt/c Program Files under WSL)")
-    cmd = [binary, "--marionette", "--marionette-port", str(marionette), "--new-window"]
+    if fresh:
+        os.makedirs(PROFILE_DIR, exist_ok=True)
+        cmd = [binary, "--marionette", "--marionette-port", str(marionette),
+               "--new-instance", "--profile", PROFILE_DIR]
+    else:
+        cmd = [binary, "--marionette", "--marionette-port", str(marionette), "--new-window"]
     subprocess.Popen(cmd + ([url] if url else []), stdout=subprocess.DEVNULL,
                      stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, start_new_session=True)
 
@@ -308,8 +336,26 @@ MODE_HELP = """ffpilot: pick a mode, there is no default.
   ffpilot start --connect      attach to the Firefox window already running
   ffpilot start --new-window   open a new Firefox window, then attach
                                (optional URL: --new-window https://example.com)
+  ffpilot start --new-window --fresh-profile
+                               throwaway profile: no existing session touched,
+                               no logins carried over, no extensions
 
 Ask the user which one they want before running start."""
+
+BLOCKED_HELP = """Firefox is already running (%d process(es)) but nothing answers Marionette on %s:%d.
+
+A second launch with --marionette does NOT help: an existing instance swallows
+the request and opens a plain window you cannot drive. Pick one, with the user:
+
+  A) Enable Marionette in the running Firefox (about:config: marionette.enabled=true,
+     marionette.port=%d), then QUIT Firefox fully and reopen it. Keeps their real
+     profile, logins, extensions. Cost: their tabs/session restart.
+  B) Quit Firefox yourself and relaunch once with --marionette. Same cost as A,
+     no pref change.
+  C) Do not touch their session: ffpilot start --new-window --fresh-profile
+     (profile: %s). The user logs in manually; no extensions are available.
+
+Never choose A or B for the user - a browser restart discards their tabs. Ask."""
 
 
 def cmd_start(args):
@@ -319,17 +365,22 @@ def cmd_start(args):
     wd, st = live_session()
     if wd:
         if args.new_window is not None:
-            open_window(args.new_window or None, marionette)
+            open_window(args.new_window or None, marionette, args.fresh_profile)
         print("ok mode=%s session=%s (reused)"
               % ("new-window" if args.new_window is not None else "connect", st["session"]))
         return
+    if args.new_window is not None and not args.fresh_profile:
+        if running_firefox() and not find_marionette(marionette, args.marionette_host or M_HOST):
+            die(BLOCKED_HELP % (len(running_firefox()), args.marionette_host or M_HOST,
+                                marionette, marionette, PROFILE_DIR))
     if args.new_window is not None:
-        open_window(args.new_window or None, marionette)
+        open_window(args.new_window or None, marionette, args.fresh_profile)
     mhost = find_marionette(marionette, tries=80 if args.new_window is not None else 1)
     if not mhost:
         die("nothing speaking Marionette on %s:%d.%s\n"
             "Enable it: about:config marionette.enabled=true, marionette.port=%d, then restart.\n"
-            "Or open a window: ffpilot start --new-window [url]"
+            "Existing Firefox blocks the flag, so a relaunch without quitting changes nothing.\n"
+            "No restart wanted? ffpilot start --new-window --fresh-profile"
             % (args.marionette_host or M_HOST, marionette,
                " Port is open but the handshake failed: a session is likely already attached."
                if port_open(args.marionette_host or M_HOST, marionette) else "",
@@ -374,12 +425,21 @@ def cmd_doctor(args):
     marionette = int(args.marionette or M_PORT)
     host = args.marionette_host or M_HOST
     wd, st = live_session()
+    handshake = bool(wd) or find_marionette(marionette, host) is not None
+    pids = running_firefox()
+    if handshake:
+        advice = "ready"
+    elif pids:
+        advice = "blocked: firefox running without marionette - ask about A/B/C (see --fresh-profile)"
+    else:
+        advice = "no firefox running: start --new-window will launch it with marionette"
     info = {"geckodriver": shutil.which("geckodriver"), "firefox": firefox_binary(),
             "wsl": is_wsl(), "marionette": "%s:%d" % (host, marionette),
-            "shared_session": bool(wd), "handshake": bool(wd) or find_marionette(marionette, host) is not None,
-            "state": st}
+            "shared_session": bool(wd), "handshake": handshake,
+            "firefox_running": len(pids), "profile": PROFILE_DIR,
+            "recommendation": advice, "state": st}
     print(fmt(info))
-    sys.exit(0 if info["handshake"] else 3)
+    sys.exit(0 if handshake else 3)
 
 
 def press(wd, keys):
@@ -527,6 +587,9 @@ def main():
     p.add_argument("--marionette", type=int, help="marionette port (default 2828)")
     p.add_argument("--marionette-host", help="host running Firefox/Marionette")
     p.add_argument("--gecko-host", help="host running an existing geckodriver (skip spawn)")
+    p.add_argument("--fresh-profile", action="store_true",
+                   help="with --new-window: launch on a throwaway profile (--new-instance), "
+                        "so a running Firefox is neither touched nor blocked")
     p.set_defaults(fn=cmd_start)
 
     p = sub.add_parser("stop", help="end session, kill spawned geckodriver")
