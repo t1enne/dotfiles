@@ -275,3 +275,6 @@ nvm use 24.16 >/dev/null 2>&1
 # Load Angular CLI autocompletion.
 # source <(ng completion script)
 
+
+# Hermes Agent command
+case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$HOME/.local/bin:$PATH" ;; esac
